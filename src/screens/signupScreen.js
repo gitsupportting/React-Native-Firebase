@@ -4,8 +4,10 @@ import { View, TouchableOpacity, StyleSheet, TextInput, Text, KeyboardAvoidingVi
 import { Form, Item, Picker } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import ImagePicker from 'react-native-image-picker';
-// import Icon from 'react-native-ionicons'
+import Icon from 'react-native-ionicons'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import 'firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 var s = require('../assets/css/styles');
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -21,7 +23,9 @@ export default class SignupScreen extends React.Component {
       avatarSource: null,
       firstName: '',
       lastName: '',
-      username: '',
+      nickname: '',
+      school: '',
+      favorite: null,
     };
   }
 
@@ -50,6 +54,9 @@ export default class SignupScreen extends React.Component {
   }
 
   handleUploadPhoto = () => {
+    this.setState({
+      buttonVisable: true
+    })
     const options = {
       title: 'Select Avatar',
       storageOptions: {
@@ -64,7 +71,6 @@ export default class SignupScreen extends React.Component {
      */
 
     ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
     
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -73,13 +79,8 @@ export default class SignupScreen extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        // const source = { uri: response.uri };
-    
-        // You can also display the image using data:
-        const source = { uri: 'data:image/jpeg;base64,' + response.data };
-        console.warn(source);
         this.setState({
-          avatarSource: source,
+          avatarSource: 'data:image/jpeg;base64,' + response.data,
         });
       }
     });
@@ -92,92 +93,95 @@ export default class SignupScreen extends React.Component {
   }
 
   onSignup = async () => {	
-    this.setState({isLoading: true});	
-    const {firstName, lastName, email, phone, birthday, signupFromLogin} = this.state;	
-    this.validation();	
-    if (signupFromLogin) {	
-      auth()	
-      .signInWithPhoneNumber(phone)	
-      .then(confirmResult => {	
-        this.setState({ 	
-          confirmResult: confirmResult	
-        }, ()=>{	
-          this.props.navigation.navigate('Confirm', {	
-            phone: phone, 	
-            firstName: firstName,	
-            lastName: lastName,	
-            birthday: birthday,	
-            email: email,	
-            confirmResult: this.state.confirmResult, 	
-            fromLogin: false	
+    
+    const {firstName, lastName, nickname, avatarSource, favorite, phone, school, signupFromLogin} = this.state;	
+    if (this.validation()) {
+      this.setState({isLoading: true});
+      if (signupFromLogin) {	
+        auth()	
+        .signInWithPhoneNumber(phone)	
+        .then(confirmResult => {	
+          this.setState({ 	
+            confirmResult: confirmResult	
+          }, ()=>{	
+            this.props.navigation.navigate('Confirm', {	
+              buttonVisable: false,
+              phone: phone, 	
+              firstName: firstName,	
+              lastName: lastName,	
+              nickname: nickname,	
+              favorite: favorite,
+              school: school,
+              avatarSource: avatarSource,
+              confirmResult: this.state.confirmResult, 	
+              fromLogin: false	
+            });	
           });	
-        });	
-      })	
-      .catch(error => {	
-        alert(error.message);	
-        this.setState({isLoading: false});	
-        console.log(error);	
-      });	
-    } else {	
-      await fetch('https://us-central1-smiledental-273502.cloudfunctions.net/createPatient', {	
-        method: 'POST',	
-        headers: {	
-          'Accept': 'application/json',	
-          'Content-Type': 'application/json'	
-        },	
-        body: JSON.stringify({	
-          clinic_id : "74",	
-          patient_first_name : firstName,	
-          patient_last_name : lastName, 	
-          patient_phone_number : phone,	
-          patient_email : email,	
-          patient_dob : birthday	
         })	
-      })	
-        .then((responseData) => {	
-          if (responseData.status == 200) {	
-            alert("successfully registered");	
+        .catch(error => {	
+          alert(error.message);	
+          this.setState({isLoading: false});	
+        });	
+      } else {
+        let userDatas = {
+          phone: phone,
+          avatarSource: avatarSource,
+          nickname: nickname,
+          school: school,
+          firstName: firstName,
+          lastName: lastName,
+          favorite: favorite        
+        }
+        firestore()
+          .collection('users')
+          .add(userDatas)
+          .then(() => {
+            alert("successfully registered");
             let userData = {	
-              'firstName': firstName,	
-              'lastName': lastName,	
-              'phone': phone	
+              'firstName': this.props.navigation.state.params.firstName,	
+              'lastName': this.props.navigation.state.params.lastName,	
+              'phone': this.props.navigation.state.params.phone	
             }	
             AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {	
               this.props.navigation.navigate('Home');	
             });	
-          } else {	
-            alert("something went wrong!");	
-          }	
-        })	
-        .catch((error) => {	
-          alert(error);	
-          return;	
-        })	
+          })
+          .catch(err=>{
+            alert(err);
+            this.setState({isLoading: false})
+          })
+        
+      }
     }
   }
 
   validation =()=> {
-    const { firstName, lastName, email, birthday, phone } = this.state;
+    const { firstName, lastName, avatarSource, nickname, school, favorite, phone } = this.state;
     if (!phone || phone.length==0) {
       alert("Please insert phone number");
-      return;
+      return false;
     }
     if (!firstName || firstName.length==0) {
       alert("Please insert first name");
-      return;
+      return false;
     }
     if (!lastName || lastName.length==0) {
       alert("Please insert last name");
-      return;
+      return false;
     }
-    if (!birthday || birthday.length==0) {
-      alert("Please insert birthday");
-      return;
+    if (!nickname || nickname.length==0) {
+      alert("Please insert nickname");
+      return false;
     }
-    if (!email || email.length==0) {
-      alert("Please insert email");
-      return;
+    if (!school || school.length==0) {
+      alert("Please insert school");
+      return false;
     }
+    if (!favorite || favorite.length==0) {
+      alert("Please insert favorite sport");
+      return false;
+    }
+    return true;
   }
 
   render() {
@@ -195,22 +199,22 @@ export default class SignupScreen extends React.Component {
         <View style={{ marginTop:15, marginBottom:15, alignItems: 'center', justifyContent: 'center' }}>
           {!this.state.buttonVisable &&
             <TouchableOpacity
-              style={styles.button3}
+              style={styles.avatar}
               onPress={this.handleUploadPhoto}
             >
-              <Text style={{ fontSize: 20, color: '#2684ff', fontWeight: 'bold' }}>Select Image</Text>
+              <Text style={{ fontSize: 20, color: '#2684ff', fontWeight: 'bold' }}>Avatar</Text>
             </TouchableOpacity>
           }
           {this.state.avatarSource &&
             <TouchableOpacity
-              style={styles.button3}
+              style={styles.avatar}
               onPress={this.handleUploadPhoto}
             >
-              <Image source={{ uri: this.state.avatarSource }} style={{ width: screenWidth * 0.5, height: screenHeight * 0.12 }} />
+              <Image source={{ uri: this.state.avatarSource }} style={styles.avatar} />
             </TouchableOpacity>}
         </View>
         <ScrollView style={[s.mv15, s.w100]}>        
-          <Text style={[s.ft12Black, s.mv15, styles.textLeft]}>First Name</Text>
+          <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>First Name</Text>
           <TextInput
             placeholder="First Name"
             onChangeText={(firstName) => this.setState({ firstName })}
@@ -218,7 +222,7 @@ export default class SignupScreen extends React.Component {
             value={this.state.firstName}
             style={ styles.inputText }
           />
-          <Text style={[s.ft12Black, s.mv15, styles.textLeft]}>Last Name</Text>
+          <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>Last Name</Text>
           <TextInput
             placeholder="Last Name"
             onChangeText={(lastName) => this.setState({ lastName })}
@@ -226,15 +230,7 @@ export default class SignupScreen extends React.Component {
             value={this.state.lastName}
             style={ styles.inputText }
           />
-          <Text style={[s.ft12Black, s.mv15, styles.textLeft]}>Email</Text>
-          <TextInput
-            placeholder="Email"
-            onChangeText={(email) => this.setState({ email })}
-            autoCapitalize='none'
-            value={this.state.email}
-            style={ styles.inputText }
-          />
-          <Text style={[s.ft12Black, s.mv15, styles.textLeft]}>Nickname</Text>
+          <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>Nickname</Text>
           <TextInput
             placeholder="Nickname"
             onChangeText={(nickname) => this.setState({ nickname })}
@@ -242,7 +238,15 @@ export default class SignupScreen extends React.Component {
             value={this.state.nickname}
             style={ styles.inputText }
           />
-          <Text style={[s.ft12Black, s.mv15, styles.textLeft]}>School</Text>
+          <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>Phone</Text>
+          <TextInput
+            placeholder="Phone number"
+            onChangeText={(phone) => this.setState({ phone })}
+            autoCapitalize='none'
+            value={this.state.phone}
+            style={ styles.inputText }
+          />
+          <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>School</Text>
           <TextInput
             placeholder="School"
             onChangeText={(school) => this.setState({ school })}
@@ -250,19 +254,19 @@ export default class SignupScreen extends React.Component {
             value={this.state.school}
             style={ styles.inputText }
           />    
-          <Text style={[s.ft12Black, s.mv15, styles.textLeft]}>Favorite</Text>
+          <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>Favorite Sport</Text>
           <Form>
             <Item picker>
               <Picker
                 mode="dropdown"
                 style={{ width: undefined }}
                 placeholder="Select Favorite Sport"
-                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderStyle={styles.inputText}
                 placeholderIconColor="#007aff"
                 selectedValue={this.state.favorite}
                 onValueChange={this.onValueChange.bind(this)}
               >
-                <Picker.Item label="Rugby" value="rugby" />
+                <Picker.Item label="Rugby" value="rugby"/>
                 <Picker.Item label="Cricket" value="cricket" />
                 <Picker.Item label="Swimming" value="swimming" />
                 <Picker.Item label="Footy" value="footy" />
@@ -270,20 +274,12 @@ export default class SignupScreen extends React.Component {
               </Picker>
             </Item>
           </Form>
-          <Text style={[s.ft12Black, s.mv15, styles.textLeft]}>Password</Text>
-          <TextInput
-            placeholder="Password"
-            onChangeText={(password) => this.setState({ password })}
-            autoCapitalize='none'
-            value={this.state.school}
-            style={ styles.inputText }
-          />    
         </ScrollView>
         <TouchableOpacity
           style={styles.btnActive}
           onPress={this.onSignup}
           activeOpacity={1}>
-          <Text style={ styles.activeTxt}>Create Account</Text>
+          <Text style={ styles.activeTxt}>Create Profile</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     );
@@ -305,9 +301,9 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Light',
     fontStyle: 'normal',
     fontWeight: 'normal',
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 19,
-    color: '#173147',
+    // color: '#173147',
     backgroundColor: '#fff',
   },
   btnActive: {
@@ -339,5 +335,19 @@ const styles = StyleSheet.create({
   },
   pr40: {
     paddingRight: 50,
+  },
+  avatar: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 5,
+    borderRadius: 5,
+    width: screenWidth * 0.4,
+    height: screenWidth * 0.4,
+    borderRadius: screenWidth * 0.2,
+    borderWidth: 3,
+    borderColor: '#F1F1F1',
+    textAlign: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
 })

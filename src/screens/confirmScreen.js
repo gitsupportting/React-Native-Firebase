@@ -3,14 +3,14 @@ import { View, TouchableOpacity, StyleSheet, TextInput, Text, Image, ActivityInd
 import AsyncStorage from '@react-native-community/async-storage';
 var s = require('../assets/css/styles');
 import backBtn from '../assets/icons/backBtn.png';
-let baseURL = 'https://us-central1-smiledental-273502.cloudfunctions.net/'
+import firestore from '@react-native-firebase/firestore';
 
 export default class ConfirmScreen extends React.Component {
   constructor(props) {
 
     super(props);
     this.state = {
-      verificationCode: '',
+      verificationCode: '123456',
       phone: this.props.navigation.state.params.phone,
       confirmResult: this.props.navigation.state.params.confirmResult,
       fromLogin: this.props.navigation.state.params.fromLogin,
@@ -31,89 +31,57 @@ export default class ConfirmScreen extends React.Component {
             userId: user.user._user.uid,
            });
           if (this.state.fromLogin) {
-              
-          await fetch(baseURL + 'lookupPatient', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              "clinic_id" : "74",
-              "patient_phone_number" : this.state.phone
-            })
-          })
-          .then((response) => response.json())
-          .then((responseData) => {
-            if (responseData) {
-              var isReg = false;
-              responseData.patient && responseData.patient.forEach((item)=>{
-                if (item.phone == this.state.phone) {
+            var isReg = false;
+            let userData = {};
+            const user = await firestore().collection('users')
+            .where('phone', '==', this.state.phone)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.docs.map(doc => {
+                  let user = doc.data();
                   isReg = true;
                   let userData = {
-                    'firstName': item.first_name,
-                    'lastName': item.last_name,
-                    'phone': item.phone
+                    'firstName': user.firstName,
+                    'lastName': user.lastName,
+                    'phone': user.phone
                   }
                   AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {
                     this.props.navigation.navigate('Home');
                   });
-                }
-              })
-              if (!isReg) {
-                this.props.navigation.navigate('Signup', {signupFromLogin: false, phone: this.state.phone});
-              }
-            } else {
-              alert("something went wrong!");
+                });
+                
+            });
+            
+            if (!isReg) {
+              this.props.navigation.navigate('Signup', {signupFromLogin: false, phone: this.state.phone});
             }
-            })
-            .catch((error) => {
-              alert(error);
-              return;
-            })
             
           } else {
-
-            let phone = this.props.navigation.state.params.phone;
-            let firstName = this.props.navigation.state.params.firstName;
-            let lastName = this.props.navigation.state.params.lastName;
-            let email = this.props.navigation.state.params.email;
-            let birthday = this.props.navigation.state.params.birthday;
-
-            await fetch(baseURL + 'createPatient', {
-              method: 'POST',
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                clinic_id : "74",
-                patient_first_name : firstName,
-                patient_last_name : lastName, 
-                patient_phone_number : phone,
-                patient_email : email,
-                patient_dob : birthday
+            let userDatas = {
+              phone: this.props.navigation.state.params.phone,
+              avatarSource: this.props.navigation.state.params.avatarSource,
+              nickname: this.props.navigation.state.params.nickname,
+              school: this.props.navigation.state.params.school,
+              firstName: this.props.navigation.state.params.firstName,
+              lastName: this.props.navigation.state.params.lastName,
+              favorite: this.props.navigation.state.params.favorite        
+            }
+            firestore()
+              .collection('users')
+              .add(userDatas)
+              .then(() => {
+                alert("successfully registered");
+                let userData = {	
+                  'firstName': this.props.navigation.state.params.firstName,	
+                  'lastName': this.props.navigation.state.params.lastName,	
+                  'phone': this.props.navigation.state.params.phone	
+                }	
+                AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {	
+                  this.props.navigation.navigate('Home');	
+                });	
               })
-            })
-
-              .then((responseData) => {
-                if (responseData.status == 200) {
-                  alert("successfully registered");
-                  let userData = {
-                    'firstName': firstName,
-                    'lastName': lastName,
-                    'phone': phone
-                  }
-                  AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {
-                    this.props.navigation.navigate('Home');
-                  });
-                } else {
-                  alert("something went wrong!");
-                }
-              })
-              .catch((error) => {
-                alert(error);
-                return;
+              .catch(err=>{
+                alert(err);
               })
           }
           // alert(`Verified! ${user.user._user.uid}`);
@@ -121,7 +89,6 @@ export default class ConfirmScreen extends React.Component {
         .catch(error => {
           alert(error.message);
           this.setState({isLoading: false});
-          console.log(error)
         })
     } else {
       alert('Please enter a 6 digit OTP code.');

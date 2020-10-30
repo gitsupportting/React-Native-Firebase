@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Header, Content, Footer, FooterTab, Button, Text } from 'native-base';
 import { View, TouchableOpacity, StyleSheet, Image, BackHandler } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 var s = require('../assets/css/styles');
 import more from '../assets/icons/more.png';
@@ -42,10 +43,17 @@ export default class HomeScreen extends React.Component {
   }
 
   onLogout =()=> {
+    
+    this.props.navigation.navigate('Login');
+  }
+
+  onLogout =()=> {
     this.setState({
       active: false
     });
-    this.props.navigation.navigate('Login');
+    AsyncStorage.setItem('userData', 'logout').then(() => {
+      this.props.navigation.navigate('Login');
+    });
   }
 
   render() {

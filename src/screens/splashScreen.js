@@ -20,10 +20,10 @@ export default class SplashScreen extends React.Component {
   render() {
     return (
       <View style={s.loader}>
-        <Image
+        {/* <Image
           source={Logo}
           style={ s.ImageIconStyle_logo }
-        />
+        /> */}
       </View>
     );
   }

@@ -8,7 +8,7 @@ export default class LoginScreen extends React.Component {
 
     super(props);
     this.state = {
-      phone: '12345678',
+      phone: '+12345678',
       isLoading: false
     };
   }
@@ -24,13 +24,16 @@ export default class LoginScreen extends React.Component {
         .signInWithPhoneNumber(this.state.phone)
         .then(confirmResult => {
           this.setState({ confirmResult }, ()=>{
-            this.props.navigation.navigate('Confirm', {phone: this.state.phone, confirmResult: this.state.confirmResult, fromLogin: true});
+            this.setState({
+              isLoading: false
+            }, ()=>{
+              this.props.navigation.navigate('Confirm', {phone: this.state.phone, confirmResult: this.state.confirmResult, fromLogin: true});
+            })
           });
         })
         .catch(error => {
           alert(error.message);
           this.setState({isLoading: false});
-          console.log(error)
         });
     } else {
       this.setState({isLoading: false})
@@ -53,7 +56,7 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={[s.loader, s.padding20]}>
         <Text style={s.title}>LOGIN</Text>
-        <Text style={[s.ft12Black, s.mv25, styles.textLeft]}>Phone</Text>
+        <Text style={[s.ft14300Gray, s.mv25, styles.textLeft]}>Phone</Text>
         <TextInput
           placeholder="+1"
           onChangeText={(phone) => this.setState({ phone })}
@@ -92,9 +95,9 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Light',
     fontStyle: 'normal',
     fontWeight: 'normal',
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 19,
-    color: '#173147',
+    // color: '#173147',
     backgroundColor: '#fff',
   },
   btnActive: {
