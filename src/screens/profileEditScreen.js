@@ -132,13 +132,13 @@ export default class ProfileEdit extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={s.loader}>
-          <ActivityIndicator size="large" color="#0c9" />
-        </View>
-      )
-    }
+    // if (this.state.isLoading) {
+    //   return (
+    //     <View style={s.loader}>
+    //       <ActivityIndicator size="large" color="#0c9" />
+    //     </View>
+    //   )
+    // }
     return (
       <Container style={s.container}>
         <Header style={s.headerContent}>
@@ -188,8 +188,7 @@ export default class ProfileEdit extends React.Component {
                 onChangeText={(firstName) => this.setState({ firstName })}
                 autoCapitalize='none'
                 value={this.state.firstName}
-                style={s.flex70}
-                style={ s.inputText }
+                style={ [s.inputText, s.w70]}
               />  
             </View>
             <View style={[styles.itemWrap]}>
@@ -199,8 +198,7 @@ export default class ProfileEdit extends React.Component {
                 onChangeText={(lastName) => this.setState({ lastName })}
                 autoCapitalize='none'
                 value={this.state.lastName}
-                style={s.flex70}
-                style={ s.inputText }
+                style={ [s.inputText, s.w70]}
               />  
             </View>
             <View style={[styles.itemWrap]}>
@@ -210,8 +208,7 @@ export default class ProfileEdit extends React.Component {
                 onChangeText={(nickname) => this.setState({ nickname })}
                 autoCapitalize='none'
                 value={this.state.nickname}
-                style={s.flex70}
-                style={ s.inputText }
+                style={ [s.inputText, s.w70]}
               />  
             </View>            
             <View style={[styles.itemWrap]}>
@@ -221,8 +218,7 @@ export default class ProfileEdit extends React.Component {
                 onChangeText={(phone) => this.setState({ phone })}
                 autoCapitalize='none'
                 value={this.state.phone}
-                style={s.flex70}
-                style={ s.inputText }
+                style={ [s.inputText, s.w70]}
               />  
             </View>
             <View style={[styles.itemWrap]}>
@@ -232,8 +228,7 @@ export default class ProfileEdit extends React.Component {
                 onChangeText={(school) => this.setState({ school })}
                 autoCapitalize='none'
                 value={this.state.school}
-                style={s.flex70}
-                style={ s.inputText }
+                style={ [s.inputText, s.w70 ]}
               />  
             </View>
             <View style={[styles.itemWrap]}>
@@ -273,7 +268,8 @@ const styles = StyleSheet.create({
   itemWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10
+    marginBottom: 10,
+    width: '100%'
   }
   
 })

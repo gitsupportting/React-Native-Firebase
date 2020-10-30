@@ -191,8 +191,7 @@ export default class SignupScreen extends React.Component {
     }
     return (
       <KeyboardAvoidingView style={[s.loader, s.padding20]}>        
-        <Image source={this.state.avatarSource} style={styles.uploadAvatar} />
-        <Text style={s.title}>Create Profile</Text>
+        <Text style={s.title, s.mt20}>Create Profile</Text>
         <View style={{ marginTop:15, marginBottom:15, alignItems: 'center', justifyContent: 'center' }}>
           {!this.state.buttonVisable &&
             <TouchableOpacity
