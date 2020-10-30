@@ -1,9 +1,9 @@
 'use strict'
 
 var React = require('react-native')
-import { Dimensions } from 'react-native';
-let deviceHeight = Dimensions.get('window').height;
-let deviceWidth = Dimensions.get('window').width;
+import {Dimensions} from 'react-native'
+let deviceHeight = Dimensions.get('window').height
+let deviceWidth = Dimensions.get('window').width
 var {StyleSheet} = React
 
 module.exports = StyleSheet.create({
@@ -34,7 +34,7 @@ module.exports = StyleSheet.create({
 
   moreIcon: {
     width: 80,
-    height:10,
+    height: 10,
     justifyContent: 'flex-end',
     flexDirection: 'row',
   },
@@ -53,56 +53,105 @@ module.exports = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 
   txCenter: {
-    width:'100%', 
-    textAlign: 'center'
+    width: '100%',
+    textAlign: 'center',
   },
 
-  ImageIconStyle_logo: {
-    padding: 12,
-    margin: 5,
-    height: deviceHeight * 0.13,
-    width: deviceWidth * 0.6,
-    resizeMode: 'stretch',
+  flexCenter: {
+    width: '100%', 
+    flexDirection: 'row', 
+    justifyContent: 'center'
+  },
+
+  avatar: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 5,
+    borderRadius: 5,
+    width: deviceWidth * 0.4,
+    height: deviceWidth * 0.4,
+    borderRadius: deviceWidth * 0.2,
+    borderWidth: 3,
+    borderColor: '#F1F1F1',
+    textAlign: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  inputText: {
+    borderRadius: 8,
+    borderBottomColor: '#E0E0E0',
+    borderBottomWidth: 1,
+    padding: 5,
+    width: '100%',
+    fontFamily: 'NunitoSans-Light',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 16,
+    lineHeight: 19,
+    // color: '#173147',
+    backgroundColor: '#fff',
+  },
+  btnActive: {
+    height: 50,
+    backgroundColor: '#173147',
+    borderRadius: 8,
+    borderColor: '#173147',
+    borderWidth: 1,
+    marginVertical: 20,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeTxt: {
+    fontFamily: 'Lato-Light',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 14,
+    lineHeight: 17,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
 
   icon30: {
     width: 30,
-    height: 30
+    height: 30,
   },
 
   backIcon: {
     height: 18,
-    width: 10
+    width: 10,
   },
 
   icon20: {
     width: 20,
-    height: 20
+    height: 20,
   },
 
   icon15: {
     width: 15,
-    height: 15
+    height: 15,
   },
 
   w100: {
-    width: '100%'
+    width: '100%',
   },
 
   w70: {
-    width: '70%'
+    width: '70%',
   },
 
   flex30: {
-    width: '30%'
+    width: '30%',
   },
 
   flex70: {
-    width: '70%'
+    width: '70%',
   },
 
   mainContainer: {
@@ -111,11 +160,15 @@ module.exports = StyleSheet.create({
   },
 
   margin20: {
-    margin: 20
+    margin: 20,
   },
 
   mt20: {
-    marginTop: 20
+    marginTop: 20,
+  },
+
+  mv60: {
+    marginVertical: 60,
   },
 
   mv25: {
@@ -127,11 +180,11 @@ module.exports = StyleSheet.create({
   },
 
   padding20: {
-    padding: 20
+    padding: 20,
   },
 
   mb5: {
-    marginBottom: 5
+    marginBottom: 5,
   },
 
   mb10: {
@@ -146,20 +199,24 @@ module.exports = StyleSheet.create({
     marginBottom: 20,
   },
 
+  mb50: {
+    marginBottom: 50,
+  },
+
   posAbsolute: {
-    position: 'absolute'
+    position: 'absolute',
   },
 
   posRelative: {
-    position: 'relative'
+    position: 'relative',
   },
 
   shadowBtn: {
     backgroundColor: '#fff',
-    shadowColor: "rgba(157, 157, 157, 0.2);",
+    shadowColor: 'rgba(157, 157, 157, 0.2);',
     shadowOffset: {
       width: 1,
-      height: 5
+      height: 5,
     },
     shadowRadius: 8,
     shadowOpacity: 1.0,
@@ -168,29 +225,29 @@ module.exports = StyleSheet.create({
     height: 60,
     borderRadius: 8,
     textAlign: 'center',
-    position:'absolute', 
-    right:20, 
+    position: 'absolute',
+    right: 20,
     top: 0,
   },
 
   splitLine: {
     backgroundColor: '#D5D6D7',
     height: 1,
-    width: '100%'
+    width: '100%',
   },
 
   profileBtn: {
-    height:30, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    borderBottomColor: '#D5D6D7', 
-    borderBottomWidth:1
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomColor: '#D5D6D7',
+    borderBottomWidth: 1,
   },
 
   formBtn: {
-    height:30, 
-    justifyContent: 'center', 
-    alignItems: 'center'
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   ft20Black: {
@@ -274,7 +331,6 @@ module.exports = StyleSheet.create({
     fontWeight: 'normal',
     fontSize: 10,
     lineHeight: 14,
-    color: '#AAAAAA'
+    color: '#AAAAAA',
   },
-
 })

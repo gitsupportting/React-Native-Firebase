@@ -33,14 +33,14 @@ export default class ConfirmScreen extends React.Component {
           if (this.state.fromLogin) {
             var isReg = false;
             let userData = {};
-            const user = await firestore().collection('users')
+            await firestore().collection('users')
             .where('phone', '==', this.state.phone)
             .get()
             .then(querySnapshot => {
                 querySnapshot.docs.map(doc => {
                   let user = doc.data();
                   isReg = true;
-                  let userData = {
+                  userData = {
                     'firstName': user.firstName,
                     'lastName': user.lastName,
                     'phone': user.phone
@@ -49,7 +49,6 @@ export default class ConfirmScreen extends React.Component {
                     this.props.navigation.navigate('Home');
                   });
                 });
-                
             });
             
             if (!isReg) {
@@ -122,13 +121,13 @@ export default class ConfirmScreen extends React.Component {
           onChangeText={(verificationCode) => this.setState({ verificationCode })}
           autoCapitalize='none'
           value={this.state.verificationCode}
-          style={ styles.inputText }
+          style={ [s.inputText, s.mv60] }
         />        
         <TouchableOpacity
-          style={styles.btnActive}
+          style={s.btnActive}
           onPress={this.handleVerifyCode}
           activeOpacity={1}>
-          <Text style={ styles.activeTxt}>Submit</Text>
+          <Text style={ s.activeTxt}>Submit</Text>
         </TouchableOpacity>
       </View>
     );
@@ -140,51 +139,6 @@ const styles = StyleSheet.create({
     textAlign:'left',
     width: '100%',
     paddingLeft: 10,
-  },
-  inputText: {
-    borderRadius: 8,
-    borderBottomColor: '#E0E0E0',
-    borderBottomWidth: 1,
-    paddingLeft:10,
-    width: '100%',
-    fontFamily: 'NunitoSans-Light',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 14,
-    lineHeight: 19,
-    color: '#173147',
-    backgroundColor: '#fff',
-    marginVertical: 40,
-  },
-  btnActive: {
-    height: 50,
-    backgroundColor: '#173147',
-    borderRadius: 8,
-    borderColor: '#173147',
-    borderWidth: 1,
-    marginVertical: 30,
-    width: '100%',
-    flexDirection: 'row', 
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  activeTxt: {
-    fontFamily: 'Lato-Light',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 14,
-    lineHeight: 17,
-    color:'#FFFFFF',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-  },
-  lineBtnTxt: {
-    borderBottomColor: '#B2B2B2',
-    marginTop: 20,
-    borderBottomWidth: 1
-  },
-  pr40: {
-    paddingRight: 50,
   },
   backBtn: {
     position: 'absolute',

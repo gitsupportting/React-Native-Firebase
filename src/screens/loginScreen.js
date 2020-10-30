@@ -55,20 +55,20 @@ export default class LoginScreen extends React.Component {
     }
     return (
       <View style={[s.loader, s.padding20]}>
-        <Text style={s.title}>LOGIN</Text>
+        <Text style={[s.title, s.mb50]}>LOGIN</Text>
         <Text style={[s.ft14300Gray, s.mv25, styles.textLeft]}>Phone</Text>
         <TextInput
           placeholder="+1"
           onChangeText={(phone) => this.setState({ phone })}
           autoCapitalize='none'
           value={this.state.phone}
-          style={ styles.inputText }
+          style={[s.inputText, s.mb50] }
         />        
         <TouchableOpacity
-          style={styles.btnActive}
+          style={s.btnActive}
           onPress={this.onSendCode}
           activeOpacity={1}>
-          <Text style={ styles.activeTxt}>Send Code</Text>
+          <Text style={ s.activeTxt}>Send Code</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={this.onSignup}
@@ -86,48 +86,10 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: 10,
   },
-  inputText: {
-    borderRadius: 8,
-    borderBottomColor: '#E0E0E0',
-    borderBottomWidth: 1,
-    padding:5,
-    width: '100%',
-    fontFamily: 'NunitoSans-Light',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 16,
-    lineHeight: 19,
-    // color: '#173147',
-    backgroundColor: '#fff',
-  },
-  btnActive: {
-    height: 50,
-    backgroundColor: '#173147',
-    borderRadius: 8,
-    borderColor: '#173147',
-    borderWidth: 1,
-    marginVertical: 30,
-    width: '100%',
-    flexDirection: 'row', 
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  activeTxt: {
-    fontFamily: 'Lato-Light',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 14,
-    lineHeight: 17,
-    color:'#FFFFFF',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-  },
+  
   lineBtnTxt: {
     borderBottomColor: '#B2B2B2',
     marginTop: 20,
     borderBottomWidth: 1
-  },
-  pr40: {
-    paddingRight: 50,
   },
 })
