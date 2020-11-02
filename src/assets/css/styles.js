@@ -51,7 +51,7 @@ module.exports = StyleSheet.create({
 
   loader: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(250, 250, 250, 0.9)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -65,6 +65,14 @@ module.exports = StyleSheet.create({
     width: '100%', 
     flexDirection: 'row', 
     justifyContent: 'center'
+  },
+
+  ImageIconStyle_logo: {
+    padding: 12,
+    margin: 5,
+    height: deviceHeight * 0.13,
+    width: deviceWidth * 0.6,
+    resizeMode: 'stretch',
   },
 
   avatar: {
@@ -82,9 +90,9 @@ module.exports = StyleSheet.create({
     flexDirection: 'row',
   },
   inputText: {
-    borderRadius: 8,
-    borderBottomColor: '#E0E0E0',
-    borderBottomWidth: 1,
+    borderRadius: 4,
+    // borderBottomColor: '#E0E0E0',
+    // borderBottomWidth: 1,
     padding: 5,
     width: '100%',
     fontFamily: 'NunitoSans-Light',
@@ -92,8 +100,8 @@ module.exports = StyleSheet.create({
     fontWeight: 'normal',
     fontSize: 16,
     lineHeight: 19,
-    // color: '#173147',
-    backgroundColor: '#fff',
+    color: '#173147',
+    backgroundColor: 'white'
   },
   btnActive: {
     height: 50,
@@ -146,8 +154,20 @@ module.exports = StyleSheet.create({
     width: '70%',
   },
 
+  flex20: {
+    width: '20%',
+  },
+
   flex30: {
     width: '30%',
+  },
+
+  flex40: {
+    width: '40%',
+  },
+
+  flex50: {
+    width: '50%'
   },
 
   flex70: {

@@ -1,15 +1,14 @@
 import React from 'react';
-import { Container, Header, Content, Footer, FooterTab, Button, Text } from 'native-base';
+import { Container, Header, Content, Text } from 'native-base';
 import { View, TouchableOpacity, StyleSheet, Image, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 var s = require('../assets/css/styles');
+import Logo from '../assets/logo.png';
 import more from '../assets/icons/more.png';
-import home1 from '../assets/icons/home1.png';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
-
     super(props);
     this.state = {active: false};
   }
@@ -27,24 +26,11 @@ export default class HomeScreen extends React.Component {
     return true;
   };
 
-  onCheckIn =()=> {
-    this.props.navigation.navigate('CheckedIn', {});
-  }
-
-  onHome =()=> {
-    this.props.navigation.navigate('Home', {});
-  }
-
   onProfile =()=> {
     this.setState({
       active: false
     });
     this.props.navigation.navigate('ProfileDetail')
-  }
-
-  onLogout =()=> {
-    
-    this.props.navigation.navigate('Login');
   }
 
   onLogout =()=> {
@@ -65,7 +51,6 @@ export default class HomeScreen extends React.Component {
             <TouchableOpacity
               style={s.headerLeft}
               activeOpacity={1}>
-              <Text></Text>
             </TouchableOpacity>
             
             <Text style={s.title}>Home</Text>
@@ -93,12 +78,28 @@ export default class HomeScreen extends React.Component {
             }
           </View>            
         </Header>
-        <Content style={s.mainContainer}></Content>
-        <Footer>
-          <FooterTab style={s.footerContent}>
-            <Button onPress={this.onHome}><Image source={home1} style={s.icon20}/></Button>
-          </FooterTab>
-        </Footer>
+        <Content style={s.mainContainer}>
+          <Image source={Logo}/>
+          <Text style={[s.mv60, s.title, s.txCenter]}>What do you want to do today?</Text>
+          <TouchableOpacity
+            style={s.btnActive}
+            onPress={()=>this.props.navigation.navigate('CreateMeetup')}
+            activeOpacity={1}>
+            <Text style={ s.activeTxt}>Create New Meet Up</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={s.btnActive}
+            onPress={()=>this.props.navigation.navigate('TodayMeetup')}
+            activeOpacity={1}>
+            <Text style={ s.activeTxt}>Today's Meet Ups</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={s.btnActive}
+            onPress={()=>this.props.navigation.navigate('MyMeetup')}
+            activeOpacity={1}>
+            <Text style={ s.activeTxt}>My Meet Ups</Text>
+          </TouchableOpacity>
+        </Content>
       </Container>
     );
   }

@@ -10,7 +10,7 @@ export default class ConfirmScreen extends React.Component {
 
     super(props);
     this.state = {
-      verificationCode: '123456',
+      verificationCode: '',
       phone: this.props.navigation.state.params.phone,
       confirmResult: this.props.navigation.state.params.confirmResult,
       fromLogin: this.props.navigation.state.params.fromLogin,

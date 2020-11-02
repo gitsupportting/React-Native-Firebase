@@ -30,7 +30,6 @@ export default class ProfileEdit extends React.Component {
     .then(querySnapshot => {
         querySnapshot.docs.map(doc => {
           let user = doc.data();
-          console.log(user.favorite)
           this.setState({
             phone: user.phone,
             avatarSource: user.avatarSource,
@@ -132,13 +131,13 @@ export default class ProfileEdit extends React.Component {
   }
 
   render() {
-    // if (this.state.isLoading) {
-    //   return (
-    //     <View style={s.loader}>
-    //       <ActivityIndicator size="large" color="#0c9" />
-    //     </View>
-    //   )
-    // }
+    if (this.state.isLoading) {
+      return (
+        <View style={s.loader}>
+          <ActivityIndicator size="large" color="#0c9" />
+        </View>
+      )
+    }
     return (
       <Container style={s.container}>
         <Header style={s.headerContent}>

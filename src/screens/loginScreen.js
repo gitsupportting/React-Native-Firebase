@@ -8,7 +8,7 @@ export default class LoginScreen extends React.Component {
 
     super(props);
     this.state = {
-      phone: '+12345678',
+      phone: '',
       isLoading: false
     };
   }

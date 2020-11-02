@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { View, TouchableOpacity, StyleSheet, TextInput, Text, KeyboardAvoidingView, ActivityIndicator, ScrollView, Image, Dimensions, PermissionsAndroid, Platform  } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, TextInput, Text, KeyboardAvoidingView, ActivityIndicator, ScrollView, Image, PermissionsAndroid, Platform  } from 'react-native';
 import { Form, Item, Picker } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import ImagePicker from 'react-native-image-picker';
@@ -153,7 +153,7 @@ export default class SignupScreen extends React.Component {
   }
 
   validation =()=> {
-    const { firstName, lastName, avatarSource, nickname, school, favorite, phone } = this.state;
+    const { firstName, lastName, nickname, school, favorite, phone } = this.state;
     if (!phone || phone.length==0) {
       alert("Please insert phone number");
       return false;
