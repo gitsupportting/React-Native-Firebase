@@ -154,6 +154,10 @@ module.exports = StyleSheet.create({
     width: '70%',
   },
 
+  flex10: {
+    width: '10%'
+  },
+
   flex20: {
     width: '20%',
   },
@@ -172,6 +176,12 @@ module.exports = StyleSheet.create({
 
   flex70: {
     width: '70%',
+  },
+  flex80: {
+    width: '80%'
+  },
+  flex90: {
+    width: '90%'
   },
 
   mainContainer: {

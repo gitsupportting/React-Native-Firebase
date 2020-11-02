@@ -26,11 +26,8 @@ export default class CreateMeetupScreen extends React.Component {
     super(props)
     this.state = {
       active: false,
-      date: new Date(),
       stime: new Date(),
       etime: new Date(),
-      mode: 'date',
-      show: false,
       byo: false,
       provided: false,
     }
@@ -122,20 +119,37 @@ export default class CreateMeetupScreen extends React.Component {
     }
   }
 
-  onChange = (event, selectedDate) => {
+  onSTimeChange = (event, selectedDate) => {
     console.log(selectedDate);
-    const currentDate = selectedDate || this.state.date;
+    const currentDate = selectedDate || this.state.stime;
     if (Platform.OS === 'ios') {
       this.setState({
-        show: true,
-        date: currentDate
+        shows: true,
+        stime: currentDate
       })
     }
   };
 
-  showMode = (currentMode) => {
+  onETimeChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.etime;
+    if (Platform.OS === 'ios') {
+      this.setState({
+        showe: true,
+        etime: currentDate
+      })
+    }
+  };
+
+  showSMode = (currentMode) => {
     this.setState({
-      show: true,
+      shows: true,
+      mode: currentMode
+    })
+  };
+
+  showEMode = (currentMode) => {
+    this.setState({
+      showe: true,
       mode: currentMode
     })
   };
@@ -202,9 +216,9 @@ export default class CreateMeetupScreen extends React.Component {
             }}
             style={[s.inputText, s.mb20]}
           />
-          <Text style={[s.ft14300Gray, styles.mt25, styles.textLeft]}>
+          {/* <Text style={[s.ft14300Gray, styles.mt25, styles.textLeft]}>
             Select Date
-          </Text>
+          </Text> */}
           {/* <DatePicker
             style={{width: '100%', marginBottom: 20}}
             date={this.state.stime}
@@ -233,20 +247,56 @@ export default class CreateMeetupScreen extends React.Component {
               this.setState({date: date})
             }}
           /> */}
-          <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>Start Time</Text>
-          <TouchableOpacity
-            onPress={()=>this.showMode('time')}
-            activeOpacity={1}>
-            <Text style={s.activeTxt}><Icon name="calendar" size={20} color="black" /></Text>
-          </TouchableOpacity>
-          {this.state.show && (
+          <Text style={[s.ft14300Gray, styles.mt25, styles.textLeft]}>Start Time</Text>
+          <View style={styles.itemWrap}>
+            <TextInput
+              placeholder="Start Time"
+              onChangeText={(stime) => this.setState({ stime })}
+              autoCapitalize='none'
+              value={this.state.stime}
+              style={ [s.inputText, s.flex90]}
+            />
+            <TouchableOpacity
+              onPress={()=>this.showSMode('time')}
+              activeOpacity={1}>
+              <Text><Icon name="calendar" size={20} color="black"/></Text>
+            </TouchableOpacity>
+          </View>
+          
+          {this.state.shows && (
             <DateTimePicker
               testID="dateTimePicker"
               value={this.state.stime}
               mode={this.state.mode}
               is24Hour={true}
               display="default"
-              onChange={this.onChange}
+              onChange={this.onSTimeChange}
+            />
+          )}
+          <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>End Time</Text>
+          <View style={styles.itemWrap}>
+            <TextInput
+              placeholder="End Time"
+              onChangeText={(etime) => this.setState({ etime })}
+              autoCapitalize='none'
+              value={this.state.etime}
+              style={ [s.inputText, s.flex90]}
+            />
+            <TouchableOpacity
+              onPress={()=>this.showEMode('time')}
+              activeOpacity={1}>
+              <Text><Icon name="calendar" size={20} color="black"/></Text>
+            </TouchableOpacity>
+          </View>
+          
+          {this.state.showe && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={this.state.etime}
+              mode={this.state.mode}
+              is24Hour={true}
+              display="default"
+              onChange={this.onETimeChange}
             />
           )}
           <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>
@@ -301,6 +351,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginBottom: 30,
+  },
+  itemWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 20,
   },
   mt25: {
     marginTop: 35,
