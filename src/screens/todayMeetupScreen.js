@@ -65,8 +65,8 @@ export default class TodayMeetupScreen extends React.Component {
     return (
       <View style={[styles.card, s.shadowStyle, s.spaceBetween]}>
         <Text style={[s.ft14BoldBlack, s.flex20]}>{data.item._data.name}</Text>
-        <Text style={[s.ft14300Gray, s.flex50]}>{data.item._data.stime}/{data.item._data.etime}</Text>
-        <Text style={[s.ft14300Gray, s.flex20]}>{data.item._data.location}</Text>
+        <Text style={[s.ft14300Gray, s.flex40]}>{data.item._data.stime}-{data.item._data.etime}</Text>
+        <Text style={[s.ft14300Gray, s.flex30]}>{data.item._data.address}</Text>
         <TouchableOpacity onPress={this.onJoin(data.item.id)}>
           <Text style={{ fontSize: 14, color: '#2684ff', fontWeight: 'bold' }}>Join</Text>
         </TouchableOpacity>

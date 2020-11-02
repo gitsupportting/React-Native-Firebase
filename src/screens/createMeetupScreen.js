@@ -11,12 +11,12 @@ import {
   Platform
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
-import DatePicker from 'react-native-datepicker'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import AsyncStorage from '@react-native-community/async-storage'
 import 'firebase/firestore'
 import firestore from '@react-native-firebase/firestore'
+import moment from 'moment';
 var s = require('../assets/css/styles')
 import more from '../assets/icons/more.png'
 import home1 from '../assets/icons/home.png'
@@ -28,6 +28,8 @@ export default class CreateMeetupScreen extends React.Component {
       active: false,
       stime: new Date(),
       etime: new Date(),
+      showe: false,
+      shows: false,
       byo: false,
       provided: false,
     }
@@ -98,8 +100,9 @@ export default class CreateMeetupScreen extends React.Component {
         name: name,
         address: address,
         coordinates: coordinates,
-        stime: stime,
-        etime: etime,
+        date: moment(this.state.stime).format('YYYY-MM-DD'),
+        stime: moment(this.state.stime).format('HH:mm'),        
+        etime: moment(this.state.etime).format('HH:mm'),
         players: players,
         rules: rules,
         byo: byo,
@@ -120,11 +123,9 @@ export default class CreateMeetupScreen extends React.Component {
   }
 
   onSTimeChange = (event, selectedDate) => {
-    console.log(selectedDate);
     const currentDate = selectedDate || this.state.stime;
     if (Platform.OS === 'ios') {
       this.setState({
-        shows: true,
         stime: currentDate
       })
     }
@@ -134,7 +135,6 @@ export default class CreateMeetupScreen extends React.Component {
     const currentDate = selectedDate || this.state.etime;
     if (Platform.OS === 'ios') {
       this.setState({
-        showe: true,
         etime: currentDate
       })
     }
@@ -142,14 +142,14 @@ export default class CreateMeetupScreen extends React.Component {
 
   showSMode = (currentMode) => {
     this.setState({
-      shows: true,
+      shows: !this.state.shows,
       mode: currentMode
     })
   };
 
   showEMode = (currentMode) => {
     this.setState({
-      showe: true,
+      showe: !this.state.showe,
       mode: currentMode
     })
   };
@@ -216,45 +216,15 @@ export default class CreateMeetupScreen extends React.Component {
             }}
             style={[s.inputText, s.mb20]}
           />
-          {/* <Text style={[s.ft14300Gray, styles.mt25, styles.textLeft]}>
-            Select Date
-          </Text> */}
-          {/* <DatePicker
-            style={{width: '100%', marginBottom: 20}}
-            date={this.state.stime}
-            mode='date'
-            format='YYYY-MM-DD'
-            confirmBtnText='Confirm'
-            cancelBtnText='Cancel'
-            customStyles={{
-              dateInput: {
-                borderRadius: 4,
-                borderWidth: 0,
-                // borderBottomColor: '#E0E0E0',
-                // borderBottomWidth: 1,
-                paddingLeft: 10,
-                width: '100%',
-                fontFamily: 'NunitoSans-Light',
-                fontStyle: 'normal',
-                fontWeight: 'normal',
-                fontSize: 14,
-                lineHeight: 19,
-                color: '#173147',
-                backgroundColor: 'white',
-              },
-            }}
-            onDateChange={date => {
-              this.setState({date: date})
-            }}
-          /> */}
+          
           <Text style={[s.ft14300Gray, styles.mt25, styles.textLeft]}>Start Time</Text>
           <View style={styles.itemWrap}>
             <TextInput
-              placeholder="Start Time"
-              onChangeText={(stime) => this.setState({ stime })}
+              placeholder="Start Time"              
               autoCapitalize='none'
               value={this.state.stime}
               style={ [s.inputText, s.flex90]}
+              value={moment(this.state.stime).format('HH:mm')}
             />
             <TouchableOpacity
               onPress={()=>this.showSMode('time')}
@@ -277,10 +247,10 @@ export default class CreateMeetupScreen extends React.Component {
           <View style={styles.itemWrap}>
             <TextInput
               placeholder="End Time"
-              onChangeText={(etime) => this.setState({ etime })}
               autoCapitalize='none'
               value={this.state.etime}
               style={ [s.inputText, s.flex90]}
+              value={moment(this.state.etime).format('HH:mm')}
             />
             <TouchableOpacity
               onPress={()=>this.showEMode('time')}

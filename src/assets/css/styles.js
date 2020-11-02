@@ -93,7 +93,7 @@ module.exports = StyleSheet.create({
     borderRadius: 4,
     // borderBottomColor: '#E0E0E0',
     // borderBottomWidth: 1,
-    padding: 5,
+    padding: 9,
     width: '100%',
     fontFamily: 'NunitoSans-Light',
     fontStyle: 'normal',
