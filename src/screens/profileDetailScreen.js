@@ -68,7 +68,7 @@ export default class ProfileDetail extends React.Component {
               activeOpacity={1}>
               <Image source={backBtn} style={s.backIcon}/>
             </TouchableOpacity>
-            <Text style={s.title}>Profile detail</Text>
+            <Text style={s.title}>My Profile</Text>
             <View style={{width:15}}></View>
           </View>          
         </Header>
