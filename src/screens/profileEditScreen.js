@@ -155,11 +155,8 @@ export default class ProfileEdit extends React.Component {
         <Content style={s.mainContainer}>
           <View style={s.spaceBetween}>
             <Text style={s.ft17Gray}>{this.state.firstName} {this.state.lastName}</Text>
-            <TouchableOpacity
-              onPress={() => this.onUpdate()}
-              style={{marginRight:5}}
-              activeOpacity={1}>
-              <Text style={s.ft14300Gray}>Save</Text>
+            <TouchableOpacity onPress={() => this.onUpdate()}>
+              <Text style={s.ft14blue}>Save</Text>
             </TouchableOpacity>
           </View>
           <View style={[s.flexCenter, s.mt20]}>
@@ -253,8 +250,8 @@ export default class ProfileEdit extends React.Component {
             </View>
           </View>
           <View style={s.splitLine}></View>
-          <TouchableOpacity style={{marginVertical: 25}} onPress={this.onLogout} activeOpacity={1}>
-            <Text style={s.ft17Gray}>Log Out</Text>
+          <TouchableOpacity style={{marginVertical: 15}} onPress={this.onLogout} activeOpacity={1}>
+            <Text style={s.ft14blue}>Log Out</Text>
           </TouchableOpacity>
         </Content>
       </Container >

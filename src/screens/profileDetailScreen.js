@@ -104,8 +104,8 @@ export default class ProfileDetail extends React.Component {
             </View>
           </View>
           <View style={s.splitLine}></View>
-          <TouchableOpacity style={{marginVertical: 25}} onPress={this.onLogout} activeOpacity={1}>
-            <Text style={s.ft17Gray}>Log Out</Text>
+          <TouchableOpacity style={{marginVertical: 15}} onPress={this.onLogout} activeOpacity={1}>
+            <Text style={s.ft14blue}>Log Out</Text>
           </TouchableOpacity>
         </Content>
       </Container >

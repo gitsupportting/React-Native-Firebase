@@ -8,7 +8,7 @@ var s = require('../assets/css/styles')
 import more from '../assets/icons/more.png'
 import home1 from '../assets/icons/home.png'
 
-export default class TodayMeetupScreen extends React.Component {
+export default class MyMeetupScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -67,15 +67,15 @@ export default class TodayMeetupScreen extends React.Component {
         <Text style={[s.ft14BoldBlack, s.flex20]}>{data.item._data.name}</Text>
         <Text style={[s.ft14300Gray, s.flex40]}>{data.item._data.stime}-{data.item._data.etime}</Text>
         <Text style={[s.ft14300Gray, s.flex30]}>{data.item._data.address}</Text>
-        <TouchableOpacity onPress={()=>this.onJoin(data.item.id)}>
-          <Text style={s.ft14blue}>Join</Text>
+        <TouchableOpacity onPress={()=>this.onDetail(data.item.id)}>
+          <Text style={s.ft14blue}>Detail</Text>
         </TouchableOpacity>
       </View>
     )
   }
 
-  onJoin =  id => {
-    this.props.navigation.navigate('MeetupDetail', {id: id, fromToday: true, fromMy: false})
+  onDetail =  id => {
+    this.props.navigation.navigate('MeetupDetail', {id: id, fromToday: false, fromMy: true})
   }
 
   render () {
@@ -89,7 +89,7 @@ export default class TodayMeetupScreen extends React.Component {
               activeOpacity={1}>
               <Image source={home1} style={s.icon30} />
             </TouchableOpacity>
-            <Text style={s.title}>Today Meet ups</Text>
+            <Text style={s.title}>My Meet ups</Text>
             <TouchableOpacity
               style={s.moreIcon}
               onPress={() => this.setState({active: !this.state.active})}
@@ -119,7 +119,7 @@ export default class TodayMeetupScreen extends React.Component {
             Hello {this.state.firstName} {this.state.lastName}
           </Text>
           <Text style={[s.ft17Gray, s.mb15]}>
-            What do you want to do today?
+            Here is your Meet ups
           </Text>
           {this.state.isLoading ? (
             <View style={s.loader}>

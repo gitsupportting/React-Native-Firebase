@@ -9,7 +9,9 @@ import profileDetailScreen from './screens/profileDetailScreen'
 import profileEditScreen from './screens/profileEditScreen'
 import homeScreen from './screens/homeScreen'
 import CreateMeetupScreen from './screens/createMeetupScreen'
+import MeetupDetailScreen from './screens/meetupDetailScreen'
 import TodayMeetupScreen from './screens/todayMeetupScreen'
+import MyMeetupScreen from './screens/myMeetupScreen'
 
 const Navigation = createStackNavigator({
   Splash: {
@@ -36,8 +38,14 @@ const Navigation = createStackNavigator({
   CreateMeetup: {
     screen: CreateMeetupScreen
   },
+  MeetupDetail: {
+    screen: MeetupDetailScreen
+  },
   TodayMeetup: {
     screen: TodayMeetupScreen
+  },
+  MyMeetup: {
+    screen: MyMeetupScreen
   },
 }, {
   initialRouteName: 'Splash',

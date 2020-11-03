@@ -280,6 +280,12 @@ module.exports = StyleSheet.create({
     alignItems: 'center',
   },
 
+  ft14blue:{ 
+    fontSize: 14, 
+    color: '#2684ff', 
+    fontWeight: 'bold' 
+  },
+
   ft20Black: {
     fontFamily: 'Lato-Light',
     fontStyle: 'normal',
