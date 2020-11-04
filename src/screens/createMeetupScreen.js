@@ -1,15 +1,7 @@
 import React from 'react'
-import {Container, Header, Content, Text} from 'native-base'
+import {Container, Header, Content, Text, Footer, FooterTab, Button} from 'native-base'
 import {CheckBox} from 'react-native-elements'
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform
-} from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker'
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
@@ -19,7 +11,8 @@ import firestore from '@react-native-firebase/firestore'
 import moment from 'moment';
 var s = require('../assets/css/styles')
 import more from '../assets/icons/more.png'
-import home1 from '../assets/icons/home.png'
+import home from '../assets/icons/home1.png'
+import chat from '../assets/icons/chat1.png'
 
 export default class CreateMeetupScreen extends React.Component {
   constructor (props) {
@@ -32,6 +25,7 @@ export default class CreateMeetupScreen extends React.Component {
       shows: false,
       byo: false,
       provided: false,
+      players: []
     }
   }
 
@@ -39,6 +33,8 @@ export default class CreateMeetupScreen extends React.Component {
     AsyncStorage.getItem('userData').then(res => {
       this.setState({
         phone: JSON.parse(res).phone,
+        firstName: JSON.parse(res).firstName,
+        lastName: JSON.parse(res).lastName,
       })
     })
   }
@@ -81,29 +77,24 @@ export default class CreateMeetupScreen extends React.Component {
   }
 
   onCreate = async () => {
-    // this.props.navigation.navigate('TodayMeetup');
-    const {
-      name,
-      address,
-      stime,
-      etime,
-      players,
-      rules,
-      byo,
-      provided,
-      phone,
-      coordinates,
-    } = this.state
+    this.state.players.push({
+      phone: this.state.phone, 
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      isActive: true
+    });
+    const { name, address, stime, etime, players, maxPlayers, rules, byo, provided, phone, coordinates } = this.state
     if (this.validation()) {
       let meetupData = {
         phone: phone,
         name: name,
         address: address,
         coordinates: coordinates,
-        date: moment(this.state.stime).format('YYYY-MM-DD'),
-        stime: moment(this.state.stime).format('HH:mm'),        
-        etime: moment(this.state.etime).format('HH:mm'),
+        date: moment(stime).format('YYYY-MM-DD'),
+        stime: moment(stime).format('HH:mm'),        
+        etime: moment(etime).format('HH:mm'),
         players: players,
+        maxPlayers: maxPlayers,
         rules: rules,
         byo: byo,
         provided: provided,
@@ -128,6 +119,11 @@ export default class CreateMeetupScreen extends React.Component {
       this.setState({
         stime: currentDate
       })
+    } else {
+      this.setState({
+        stime: currentDate,
+        shows: false
+      })
     }
   };
 
@@ -136,6 +132,11 @@ export default class CreateMeetupScreen extends React.Component {
     if (Platform.OS === 'ios') {
       this.setState({
         etime: currentDate
+      })
+    } else {
+      this.setState({
+        etime: currentDate,
+        showe: false
       })
     }
   };
@@ -161,9 +162,7 @@ export default class CreateMeetupScreen extends React.Component {
           <View style={s.spaceBetween}>
             <TouchableOpacity
               style={s.headerLeft}
-              onPress={() => this.props.navigation.navigate('Home')}
               activeOpacity={1}>
-              <Image source={home1} style={s.icon30} />
             </TouchableOpacity>
             <Text style={s.title}>Create Meetup</Text>
             <TouchableOpacity
@@ -222,7 +221,7 @@ export default class CreateMeetupScreen extends React.Component {
             <TextInput
               placeholder="Start Time"              
               autoCapitalize='none'
-              value={this.state.stime}
+              editable={false}
               style={ [s.inputText, s.flex90]}
               value={moment(this.state.stime).format('HH:mm')}
             />
@@ -248,7 +247,7 @@ export default class CreateMeetupScreen extends React.Component {
             <TextInput
               placeholder="End Time"
               autoCapitalize='none'
-              value={this.state.etime}
+              editable={false}
               style={ [s.inputText, s.flex90]}
               value={moment(this.state.etime).format('HH:mm')}
             />
@@ -273,9 +272,9 @@ export default class CreateMeetupScreen extends React.Component {
             Max Players(Optional)
           </Text>
           <TextInput
-            onChangeText={players => this.setState({players})}
+            onChangeText={maxPlayers => this.setState({maxPlayers})}
             autoCapitalize='none'
-            value={this.state.players}
+            value={this.state.maxPlayers}
             style={[s.inputText, s.mb20]}
           />
           <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>
@@ -309,6 +308,12 @@ export default class CreateMeetupScreen extends React.Component {
             <Text style={s.activeTxt}>Create New Meet Up</Text>
           </TouchableOpacity>
         </Content>
+        <Footer>
+          <FooterTab style={s.footerContent}>
+            <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('Chat')}><Image source={chat} style={s.icon30}/></Button>
+          </FooterTab>
+        </Footer>
       </Container>
     )
   }

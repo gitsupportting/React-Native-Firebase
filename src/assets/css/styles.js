@@ -41,7 +41,8 @@ module.exports = StyleSheet.create({
 
   footerContent: {
     alignSelf: 'center',
-    backgroundColor: 'rgba(250, 250, 250, 0.9)',
+    // backgroundColor: 'rgba(250, 250, 250, 0.9)',
+    backgroundColor: 'white',
     elevation: 1,
     flexDirection: 'row',
     alignItems: 'center',

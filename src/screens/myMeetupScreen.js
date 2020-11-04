@@ -1,10 +1,12 @@
 import React from 'react'
-import {Container, Header, Content, Text} from 'native-base'
+import {Container, Header, Content, Text, Footer, FooterTab, Button} from 'native-base'
 import { View, TouchableOpacity, StyleSheet, Image, FlatList, ActivityIndicator } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import 'firebase/firestore'
 import firestore from '@react-native-firebase/firestore'
 var s = require('../assets/css/styles')
+import home from '../assets/icons/home1.png'
+import chat from '../assets/icons/chat1.png'
 import more from '../assets/icons/more.png'
 import home1 from '../assets/icons/home.png'
 
@@ -13,6 +15,7 @@ export default class MyMeetupScreen extends React.Component {
     super(props)
     this.state = {
       isLoading: true,
+      meetups: [],
       active: false,
     }
   }
@@ -33,14 +36,25 @@ export default class MyMeetupScreen extends React.Component {
   }
 
   getMeetupData = async phone => {
+    let count = 0;
     await firestore()
       .collection('meetups')
-      .where('phone', '==', phone)
       .get()
       .then(querySnapshot => {
-        this.setState({
-          meetups: querySnapshot.docs,
-          isLoading: false,
+        querySnapshot.docs.map(item=>{
+          let isEnable = false;
+          item._data.players.map(player=>{
+            if (player.phone == phone) {
+              isEnable = true;
+            }
+          })
+          if (isEnable == true) {
+            this.state.meetups.push(item);
+          }          
+          count++;
+          if (querySnapshot.docs.length==count) {
+            this.setState({isLoading: false})
+          }
         })
       })
   }
@@ -85,9 +99,7 @@ export default class MyMeetupScreen extends React.Component {
           <View style={s.spaceBetween}>
             <TouchableOpacity
               style={s.headerLeft}
-              onPress={() => this.props.navigation.navigate('Home')}
               activeOpacity={1}>
-              <Image source={home1} style={s.icon30} />
             </TouchableOpacity>
             <Text style={s.title}>My Meet ups</Text>
             <TouchableOpacity
@@ -127,7 +139,7 @@ export default class MyMeetupScreen extends React.Component {
             </View>
           ) : (
             <View>
-              {this.state.meetups ? (
+              {this.state.meetups.length>0 ? (
                 <FlatList
                   data={this.state.meetups}
                   renderItem={item => this.renderItem(item)}
@@ -140,6 +152,12 @@ export default class MyMeetupScreen extends React.Component {
             </View>
           )}
         </Content>
+        <Footer>
+          <FooterTab style={s.footerContent}>
+            <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('Chat')}><Image source={chat} style={s.icon30}/></Button>
+          </FooterTab>
+        </Footer>
       </Container>
     )
   }

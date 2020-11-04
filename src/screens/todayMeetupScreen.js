@@ -1,12 +1,14 @@
 import React from 'react'
-import {Container, Header, Content, Text} from 'native-base'
+import {Container, Header, Content, Text, Button, FooterTab, Footer} from 'native-base'
 import { View, TouchableOpacity, StyleSheet, Image, FlatList, ActivityIndicator } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import 'firebase/firestore'
 import firestore from '@react-native-firebase/firestore'
+import moment from 'moment';
 var s = require('../assets/css/styles')
 import more from '../assets/icons/more.png'
-import home1 from '../assets/icons/home.png'
+import home from '../assets/icons/home1.png'
+import chat from '../assets/icons/chat1.png'
 
 export default class TodayMeetupScreen extends React.Component {
   constructor (props) {
@@ -14,6 +16,8 @@ export default class TodayMeetupScreen extends React.Component {
     this.state = {
       isLoading: true,
       active: false,
+      meetups: [],
+      currentDate: moment(new Date()).format('YYYY-MM-DD'),
     }
   }
 
@@ -26,21 +30,33 @@ export default class TodayMeetupScreen extends React.Component {
           lastName: JSON.parse(res).lastName,
         },
         () => {
-          this.getMeetupData(this.state.phone)
+          this.getMeetupData(this.state.phone, this.state.currentDate)
         },
       )
     })
   }
 
-  getMeetupData = async phone => {
+  getMeetupData = async (phone, date) => {
+    let count = 0;
     await firestore()
       .collection('meetups')
-      .where('phone', '==', phone)
+      .where('date', '==', date)
       .get()
       .then(querySnapshot => {
-        this.setState({
-          meetups: querySnapshot.docs,
-          isLoading: false,
+        querySnapshot.docs.map(item=>{
+          let isEnable = true;
+          item._data.players.map(player=>{
+            if (player.phone == phone) {
+              isEnable = false;
+            }
+          })
+          if (isEnable == true) {
+            this.state.meetups.push(item);
+          }          
+          count++;
+          if (querySnapshot.docs.length==count) {
+            this.setState({isLoading: false})
+          }
         })
       })
   }
@@ -85,9 +101,7 @@ export default class TodayMeetupScreen extends React.Component {
           <View style={s.spaceBetween}>
             <TouchableOpacity
               style={s.headerLeft}
-              onPress={() => this.props.navigation.navigate('Home')}
               activeOpacity={1}>
-              <Image source={home1} style={s.icon30} />
             </TouchableOpacity>
             <Text style={s.title}>Today Meet ups</Text>
             <TouchableOpacity
@@ -127,7 +141,7 @@ export default class TodayMeetupScreen extends React.Component {
             </View>
           ) : (
             <View>
-              {this.state.meetups ? (
+              {this.state.meetups.length>0 ? (
                 <FlatList
                   data={this.state.meetups}
                   renderItem={item => this.renderItem(item)}
@@ -140,6 +154,12 @@ export default class TodayMeetupScreen extends React.Component {
             </View>
           )}
         </Content>
+        <Footer>
+          <FooterTab style={s.footerContent}>
+            <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('Chat')}><Image source={chat} style={s.icon30}/></Button>
+          </FooterTab>
+        </Footer>
       </Container>
     )
   }

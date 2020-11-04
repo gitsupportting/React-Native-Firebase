@@ -1,9 +1,10 @@
 import React from 'react';
-import { Container, Header, Content, Text } from 'native-base';
+import { Container, Header, Content, Text, Footer, FooterTab, Button } from 'native-base';
 import { View, TouchableOpacity, StyleSheet, Image, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-
 var s = require('../assets/css/styles');
+import home from '../assets/icons/home1.png'
+import chat from '../assets/icons/chat1.png'
 import Logo from '../assets/logo.png';
 import more from '../assets/icons/more.png';
 
@@ -52,7 +53,6 @@ export default class HomeScreen extends React.Component {
               style={s.headerLeft}
               activeOpacity={1}>
             </TouchableOpacity>
-            
             <Text style={s.title}>Home</Text>
             <TouchableOpacity
               style={s.moreIcon}
@@ -100,6 +100,12 @@ export default class HomeScreen extends React.Component {
             <Text style={ s.activeTxt}>My Meet Ups</Text>
           </TouchableOpacity>
         </Content>
+        <Footer>
+          <FooterTab style={s.footerContent}>
+            <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('Chat')}><Image source={chat} style={s.icon30}/></Button>
+          </FooterTab>
+        </Footer>
       </Container>
     );
   }

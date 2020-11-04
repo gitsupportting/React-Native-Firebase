@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
-import { Container, Header, Content, Text, View } from 'native-base';
+import { StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform, FlatList } from 'react-native';
+import { Container, Header, Content, Text, View, FooterTab, Footer, Button } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import  MapView,{Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
+import home from '../assets/icons/home1.png'
+import chat from '../assets/icons/chat1.png'
 import editBtn from '../assets/icons/editIcon.png';
 import backBtn from '../assets/icons/backBtn.png';
 var s = require('../assets/css/styles');
@@ -60,6 +62,18 @@ export default class MeetupDetailScreen extends React.Component {
     AsyncStorage.setItem('userData', 'logout').then(() => {
       this.props.navigation.navigate('Login');
     });
+  }
+
+  renderItem = data => {
+    console.warn(data.item);
+    return (
+      <View style={{flexDirection: 'row', marginBottom: 10}}>
+        <Text style={[s.ft14300Gray, s.flex40]}>{data.item.firstName} {data.item.lastName}</Text>
+        <TouchableOpacity onPress={()=>this.onAdd(data.item.phone)}>
+          <Text style={s.ft14blue}>Added</Text>
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   render() {
@@ -124,7 +138,11 @@ export default class MeetupDetailScreen extends React.Component {
             >
             </MapView>}
           </View>
-          <Text style={[s.ft14BoldBlack, s.mb100]}>Rules</Text>
+          <Text style={[s.ft14BoldBlack, s.mb10, ]}>Players</Text>
+          <View>
+            <FlatList data={this.state.meetupData.players} renderItem={item => this.renderItem(item)}/>
+          </View>
+          <Text style={[s.ft14BoldBlack, s.mb10]}>Rules</Text>
           <Text style={[s.ft14300Gray, s.mb20]}>{this.state.meetupData.rules}</Text>
           {this.state.fromToday &&
           <View>
@@ -139,8 +157,13 @@ export default class MeetupDetailScreen extends React.Component {
             </View>
           </View>
           }
-          
         </Content>
+        <Footer>
+          <FooterTab style={s.footerContent}>
+            <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('Chat')}><Image source={chat} style={s.icon30}/></Button>
+          </FooterTab>
+        </Footer>
       </Container >
     );
   }
