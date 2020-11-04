@@ -53,11 +53,11 @@ export default class TodayMeetupScreen extends React.Component {
           if (isEnable == true) {
             this.state.meetups.push(item);
           }          
-          count++;
-          if (querySnapshot.docs.length==count) {
-            this.setState({isLoading: false})
-          }
+          count++;          
         })
+        if (querySnapshot.docs.length==count) {
+          this.setState({isLoading: false})
+        }
       })
   }
 

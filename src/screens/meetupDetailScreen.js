@@ -19,12 +19,20 @@ export default class MeetupDetailScreen extends React.Component {
       isLoading: true,
       id: this.props.navigation.state.params.id,
       fromMy: this.props.navigation.state.params.fromMy,
-      fromToday: this.props.navigation.state.params.fromToday
+      fromToday: this.props.navigation.state.params.fromToday,
+      nonRegUsers: []
     };
   }
 
   componentDidMount() {
     this.getMeetupData(this.state.id);
+    AsyncStorage.getItem('userData').then(res => {
+      this.setState({
+        phone: JSON.parse(res).phone,
+        firstName: JSON.parse(res).firstName,
+        lastName: JSON.parse(res).lastName,
+      })
+    });
     setTimeout(() => {
       Geolocation.getCurrentPosition(
         (location) => {
@@ -47,15 +55,47 @@ export default class MeetupDetailScreen extends React.Component {
     }, 1000);
   }
 
-  getMeetupData =async(id)=> {
+  getMeetupData =async(id)=> {    
     await firestore().collection('meetups').doc(id)
     .get()
     .then(querySnapshot => {
       this.setState({
         meetupData: querySnapshot._data,
-        isLoading: false
+      }, ()=>{
+        this.getUsers(this.state.meetupData.players)
       })
     });
+  }
+
+  getUsers = async (players) => {
+    let count = 0;
+    this.setState({nonRegUsers: []})
+    await firestore().collection('users')
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.docs.map(doc => {
+          let user = doc.data();
+          let nonReg = true;
+          console.warn(user);
+          players.map(player=>{
+            if (user.phone == player.phone) {
+              nonReg = false;
+            }
+          })
+          if (nonReg == true) {
+            this.state.nonRegUsers.push({
+              firstName: user.firstName,
+              lastName: user.lastName,
+              phone: user.phone,
+              isActive: false
+            })
+          }
+          count++;
+        });
+        if (count == querySnapshot.docs.length) {
+          this.setState({isLoading: false})
+        }
+      });
   }
 
   onLogout =()=> {
@@ -64,13 +104,35 @@ export default class MeetupDetailScreen extends React.Component {
     });
   }
 
-  renderItem = data => {
-    console.warn(data.item);
+  renderRegItem = data => {
     return (
       <View style={{flexDirection: 'row', marginBottom: 10}}>
         <Text style={[s.ft14300Gray, s.flex40]}>{data.item.firstName} {data.item.lastName}</Text>
-        <TouchableOpacity onPress={()=>this.onAdd(data.item.phone)}>
-          <Text style={s.ft14blue}>Added</Text>
+      </View>
+    )
+  }
+
+  onAdd =(player)=> {
+    const {id} = this.state;
+    this.setState({isLoading: true});
+    this.state.meetupData.players.push(player);
+    firestore().collection("meetups").doc(id).update(this.state.meetupData)
+      .then(() => {   
+        this.getMeetupData(id);         
+        alert("successfully added");
+      })
+      .catch(err=>{
+        alert(err);
+        this.setState({isLoading: false})
+      })
+  }
+
+  renderNonRegItem = data => {
+    return (
+      <View style={{flexDirection: 'row', marginBottom: 10}}>
+        <Text style={[s.ft14300Gray, s.flex40]}>{data.item.firstName} {data.item.lastName}</Text>
+        <TouchableOpacity onPress={()=>this.onAdd(data.item)}>
+          <Text style={s.ft14blue}>Add</Text>
         </TouchableOpacity>
       </View>
     )
@@ -138,9 +200,15 @@ export default class MeetupDetailScreen extends React.Component {
             >
             </MapView>}
           </View>
-          <Text style={[s.ft14BoldBlack, s.mb10, ]}>Players</Text>
+          <Text style={[s.ft14BoldBlack, s.mb10, ]}>Added players</Text>
           <View>
-            <FlatList data={this.state.meetupData.players} renderItem={item => this.renderItem(item)}/>
+            <FlatList data={this.state.meetupData.players} renderItem={item => this.renderRegItem(item)}/>
+          </View>
+          {this.state.nonRegUsers.length>0 &&
+          <Text style={[s.ft14BoldBlack, s.mb10, ]}>Which player do you want to add ?</Text>
+          }
+          <View>
+            <FlatList data={this.state.nonRegUsers} renderItem={item => this.renderNonRegItem(item)}/>
           </View>
           <Text style={[s.ft14BoldBlack, s.mb10]}>Rules</Text>
           <Text style={[s.ft14300Gray, s.mb20]}>{this.state.meetupData.rules}</Text>
@@ -151,7 +219,7 @@ export default class MeetupDetailScreen extends React.Component {
               <TouchableOpacity onPress={() => this.props.navigation.goBack()} activeOpacity={1} style={s.flex20}>
                 <Text style={s.ft14blue}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.props.navigation.goBack()} activeOpacity={1}>
+              <TouchableOpacity onPress={()=>this.onAdd({firstName: this.state.firstName, lastName: this.state.lastName, phone: this.state.phone, isActive: false})} activeOpacity={1}>
                 <Text style={s.ft14blue}>Join</Text>
               </TouchableOpacity>
             </View>
