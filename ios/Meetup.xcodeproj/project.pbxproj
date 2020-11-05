@@ -303,7 +303,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = B43ZG4LX5M;
+						DevelopmentTeam = FB39T6JWJY;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -746,8 +746,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B43ZG4LX5M;
+				DEVELOPMENT_TEAM = FB39T6JWJY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Meetup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -756,7 +757,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Meetup;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kindertales.iOSparents;
 				PRODUCT_NAME = Meetup;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -770,8 +771,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B43ZG4LX5M;
+				DEVELOPMENT_TEAM = FB39T6JWJY;
 				INFOPLIST_FILE = Meetup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -779,7 +781,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Meetup;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kindertales.iOSparents;
 				PRODUCT_NAME = Meetup;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
