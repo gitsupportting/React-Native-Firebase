@@ -221,12 +221,11 @@ export default class CreateMeetupScreen extends React.Component {
             <TextInput
               placeholder="Start Time"              
               autoCapitalize='none'
-              editable={false}
               style={ [s.inputText, s.flex90]}
               value={moment(this.state.stime).format('HH:mm')}
             />
             <TouchableOpacity
-              onPress={()=>this.showSMode('time')}
+              onPress={()=>this.showSMode('datetime')}
               activeOpacity={1}>
               <Text><Icon name="calendar" size={20} color="black"/></Text>
             </TouchableOpacity>
@@ -247,12 +246,11 @@ export default class CreateMeetupScreen extends React.Component {
             <TextInput
               placeholder="End Time"
               autoCapitalize='none'
-              editable={false}
               style={ [s.inputText, s.flex90]}
               value={moment(this.state.etime).format('HH:mm')}
             />
             <TouchableOpacity
-              onPress={()=>this.showEMode('time')}
+              onPress={()=>this.showEMode('datetime')}
               activeOpacity={1}>
               <Text><Icon name="calendar" size={20} color="black"/></Text>
             </TouchableOpacity>

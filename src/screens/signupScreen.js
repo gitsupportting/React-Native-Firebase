@@ -55,6 +55,7 @@ export default class SignupScreen extends React.Component {
     })
     const options = {
       title: 'Select Avatar',
+      quality: 0.5,
       storageOptions: {
         skipBackup: true,
         path: 'images',
