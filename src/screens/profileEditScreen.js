@@ -5,6 +5,7 @@ import { Container, Header, Content, Text, View, Form, Item, Picker } from 'nati
 import ImagePicker from 'react-native-image-picker';
 import 'firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import backBtn from '../assets/icons/backBtn.png';
 var s = require('../assets/css/styles');
 
@@ -51,7 +52,7 @@ export default class ProfileEdit extends React.Component {
     })
     const options = {
       title: 'Select Avatar',
-      quality:0.5,
+      quality:0.2,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -91,8 +92,12 @@ export default class ProfileEdit extends React.Component {
     });
   }
 
-  onUpdate =()=> {
+  onUpdate =async()=> {
     const {phone, firstName, lastName, nickname, school, favorite, avatarSource} = this.state;
+    // const url = await storage()
+    //   .ref(avatarSource)
+    //   .getDownloadURL();
+    // console.warn(url);
     let userDatas = {
       phone: phone,
       firstName: firstName,
@@ -102,6 +107,7 @@ export default class ProfileEdit extends React.Component {
       favorite: favorite,
       avatarSource: avatarSource
     };
+    
     try {
       let that  = this;
       firestore().collection("users").where("phone", "==", phone)
@@ -117,7 +123,7 @@ export default class ProfileEdit extends React.Component {
                 }	
                 AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {	
                   alert("successfully updated");
-                  that.props.navigation.navigate('ProfileDetail')
+                  that.props.navigation.navigate('Home')
                 });	
               })
               .catch(err=>{

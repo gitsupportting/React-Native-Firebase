@@ -96,7 +96,7 @@ module.exports = StyleSheet.create({
     // borderBottomWidth: 1,
     padding: 9,
     width: '100%',
-    fontFamily: 'NunitoSans-Light',
+    fontFamily: 'NunitoSans-Regular',
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 16,
@@ -117,7 +117,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
   },
   activeTxt: {
-    fontFamily: 'Lato-Light',
+    fontFamily: 'Lato-Regular',
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 14,
@@ -196,6 +196,10 @@ module.exports = StyleSheet.create({
 
   mt20: {
     marginTop: 20,
+  },
+
+  mt40: {
+    marginTop: 40
   },
 
   mv60: {
@@ -288,7 +292,7 @@ module.exports = StyleSheet.create({
   },
 
   ft20Black: {
-    fontFamily: 'Lato-Light',
+    fontFamily: 'Lato-Regular',
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 20,
@@ -299,24 +303,22 @@ module.exports = StyleSheet.create({
   title: {
     fontSize: 17,
     color: '#2F2F2F',
-    fontFamily: 'Lato-Light',
-    fontWeight: 'bold',
+    fontFamily: 'Lato-Bold',
     lineHeight: 20,
-    fontStyle: 'normal',
     letterSpacing: 0.5,
   },
 
   ft17Gray: {
     fontSize: 17,
     color: '#2F2F2F',
-    fontFamily: 'Lato-Light',
+    fontFamily: 'Lato-Regular',
     fontWeight: 'normal',
     lineHeight: 20,
     fontStyle: 'normal',
   },
 
   ft15RegularBlack: {
-    fontFamily: 'Lato-Light',
+    fontFamily: 'Lato-Regular',
     fontStyle: 'normal',
     fontWeight: '300',
     fontSize: 15,
@@ -325,9 +327,7 @@ module.exports = StyleSheet.create({
   },
 
   ft14BoldBlack: {
-    fontFamily: 'Lato-Light',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
+    fontFamily: 'Lato-Bold',
     fontSize: 14,
     lineHeight: 17,
     letterSpacing: 0.5,
@@ -335,7 +335,7 @@ module.exports = StyleSheet.create({
   },
 
   ft14300Gray: {
-    fontFamily: 'Lato-Light',
+    fontFamily: 'Lato-Regular',
     fontStyle: 'normal',
     fontWeight: '300',
     fontSize: 14,
@@ -345,7 +345,7 @@ module.exports = StyleSheet.create({
   },
 
   ft12Gray: {
-    fontFamily: 'Lato-Light',
+    fontFamily: 'Lato-Regular',
     fontStyle: 'normal',
     fontWeight: '300',
     fontSize: 12,
@@ -354,7 +354,7 @@ module.exports = StyleSheet.create({
   },
 
   ft12Black: {
-    fontFamily: 'Lato-Light',
+    fontFamily: 'Lato-Regular',
     fontStyle: 'normal',
     fontWeight: '300',
     fontSize: 12,
@@ -363,7 +363,7 @@ module.exports = StyleSheet.create({
   },
 
   ft10Gray: {
-    fontFamily: 'NunitoSans-Light',
+    fontFamily: 'NunitoSans-Regular',
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 10,

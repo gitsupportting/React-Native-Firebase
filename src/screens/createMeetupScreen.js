@@ -221,6 +221,7 @@ export default class CreateMeetupScreen extends React.Component {
             <TextInput
               placeholder="Start Time"              
               autoCapitalize='none'
+              editable={false}
               style={ [s.inputText, s.flex90]}
               value={moment(this.state.stime).format('HH:mm')}
             />
@@ -246,6 +247,7 @@ export default class CreateMeetupScreen extends React.Component {
             <TextInput
               placeholder="End Time"
               autoCapitalize='none'
+              editable={false}
               style={ [s.inputText, s.flex90]}
               value={moment(this.state.etime).format('HH:mm')}
             />

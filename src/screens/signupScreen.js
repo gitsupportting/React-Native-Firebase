@@ -6,6 +6,7 @@ import auth from '@react-native-firebase/auth';
 import ImagePicker from 'react-native-image-picker';
 import 'firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 var s = require('../assets/css/styles');
 
 export default class SignupScreen extends React.Component {
@@ -55,7 +56,7 @@ export default class SignupScreen extends React.Component {
     })
     const options = {
       title: 'Select Avatar',
-      quality: 0.5,
+      quality: 0.2,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -120,6 +121,9 @@ export default class SignupScreen extends React.Component {
           this.setState({isLoading: false});	
         });	
       } else {
+        // const url = await storage()
+        //   .ref(avatarSource)
+        //   .getDownloadURL();
         let userDatas = {
           phone: phone,
           avatarSource: avatarSource,
@@ -192,7 +196,7 @@ export default class SignupScreen extends React.Component {
     }
     return (
       <KeyboardAvoidingView style={[s.loader, s.padding20]}>        
-        <Text style={s.title, s.mt20}>Create Profile</Text>
+        <Text style={s.title, s.mt40}>Create Profile</Text>
         <View style={{ marginTop:15, marginBottom:15, alignItems: 'center', justifyContent: 'center' }}>
           {!this.state.buttonVisable &&
             <TouchableOpacity
