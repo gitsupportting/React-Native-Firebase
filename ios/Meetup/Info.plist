@@ -27,13 +27,13 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.229941515038-bijhangib7l1tvta9pjg342sdle548j3</string>
+				<string>com.googleusercontent.apps.229941515038-mmpeufiiairuvfd060ti4rfutloc1ff8</string>
 			</array>
 		</dict>
 		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -50,13 +50,15 @@
 		</dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string></string>
+	<string>This app uses Media</string>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>This app uses Camera</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app uses Location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>This app uses Location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>This app uses photo library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

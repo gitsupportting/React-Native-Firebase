@@ -115,16 +115,33 @@ export default class ProfileEdit extends React.Component {
         .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
               firestore().collection("users").doc(doc.id).update(userDatas)
-              .then(() => {                
-                let userData = {	
-                  'firstName': firstName,	
-                  'lastName': lastName,	
-                  'phone': phone	
-                }	
-                AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {	
-                  alert("successfully updated");
-                  that.props.navigation.navigate('Home')
-                });	
+              .then(() => {  
+                firestore().collection("meetups").get()
+                .then(function (meetups) {
+                  meetups.forEach(function (meetup) {
+                    let ischanged = false;
+                    meetup._data.players.map(player=>{
+                      if (player.phone == phone) {
+                        player.firstName = firstName;
+                        player.lastName = lastName;
+                        ischanged = true;
+                      }                      
+                    })
+                    if (ischanged == true) {
+                      firestore().collection("meetups").doc(meetup.id).update(meetup._data);
+                    }                    
+                  })
+
+                  let userData = {	
+                    'firstName': firstName,	
+                    'lastName': lastName,	
+                    'phone': phone	
+                  }	
+                  AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {	
+                    alert("successfully updated");
+                    that.props.navigation.navigate('Home')
+                  });	
+                });                
               })
               .catch(err=>{
                 alert(err);

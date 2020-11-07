@@ -112,14 +112,20 @@ export default class MeetupDetailScreen extends React.Component {
     )
   }
 
-  onAdd =(player)=> {
+  onAdd =(player, flag)=> {
     const {id} = this.state;
     this.setState({isLoading: true});
     this.state.meetupData.players.push(player);
     firestore().collection("meetups").doc(id).update(this.state.meetupData)
       .then(() => {   
-        this.getMeetupData(id);         
-        alert("successfully added");
+        this.getMeetupData(id);   
+        if (flag == true) {
+          alert("successfully added");
+        } else {
+          alert("successfully joined");
+          this.props.navigation.navigate('MyMeetup');
+        }
+        
       })
       .catch(err=>{
         alert(err);
@@ -131,7 +137,7 @@ export default class MeetupDetailScreen extends React.Component {
     return (
       <View style={{flexDirection: 'row', marginBottom: 10}}>
         <Text style={[s.ft14300Gray, s.flex40]}>{data.item.firstName} {data.item.lastName}</Text>
-        <TouchableOpacity onPress={()=>this.onAdd(data.item)}>
+        <TouchableOpacity onPress={()=>this.onAdd(data.item, true)}>
           <Text style={s.ft14blue}>Add</Text>
         </TouchableOpacity>
       </View>
@@ -180,7 +186,7 @@ export default class MeetupDetailScreen extends React.Component {
               <Text style={[s.ft14300Gray, s.mb10]}>{this.state.meetupData.address}</Text>
             </View>
           </View>
-          <View style={s.mb20}>
+          <View style={s.mv15}>
           {this.state.isMapReady && <MapView
               initialRegion={this.state.region}
               OnLayout={this.onMapLayout}
@@ -200,7 +206,9 @@ export default class MeetupDetailScreen extends React.Component {
             >
             </MapView>}
           </View>
-          <Text style={[s.ft14BoldBlack, s.mb10, ]}>Added players</Text>
+          {this.state.meetupData.players.length>0 &&
+            <Text style={[s.ft14BoldBlack, s.mb10, ]}>Added players</Text>
+          }          
           <View>
             <FlatList data={this.state.meetupData.players} renderItem={item => this.renderRegItem(item)}/>
           </View>
@@ -219,7 +227,7 @@ export default class MeetupDetailScreen extends React.Component {
               <TouchableOpacity onPress={() => this.props.navigation.goBack()} activeOpacity={1} style={s.flex20}>
                 <Text style={s.ft14blue}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>this.onAdd({firstName: this.state.firstName, lastName: this.state.lastName, phone: this.state.phone, isActive: false})} activeOpacity={1}>
+              <TouchableOpacity onPress={()=>this.onAdd({firstName: this.state.firstName, lastName: this.state.lastName, phone: this.state.phone, isActive: false}, false)} activeOpacity={1}>
                 <Text style={s.ft14blue}>Join</Text>
               </TouchableOpacity>
             </View>

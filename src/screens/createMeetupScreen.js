@@ -77,12 +77,12 @@ export default class CreateMeetupScreen extends React.Component {
   }
 
   onCreate = async () => {
-    this.state.players.push({
-      phone: this.state.phone, 
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      isActive: true
-    });
+    // this.state.players.push({
+    //   phone: this.state.phone, 
+    //   firstName: this.state.firstName,
+    //   lastName: this.state.lastName,
+    //   isActive: true
+    // });
     const { name, address, stime, etime, players, maxPlayers, rules, byo, provided, phone, coordinates } = this.state
     if (this.validation()) {
       let meetupData = {
@@ -226,7 +226,7 @@ export default class CreateMeetupScreen extends React.Component {
               value={moment(this.state.stime).format('HH:mm')}
             />
             <TouchableOpacity
-              onPress={()=>this.showSMode('datetime')}
+              onPress={()=>this.showSMode('time')}
               activeOpacity={1}>
               <Text><Icon name="calendar" size={20} color="black"/></Text>
             </TouchableOpacity>
@@ -252,7 +252,7 @@ export default class CreateMeetupScreen extends React.Component {
               value={moment(this.state.etime).format('HH:mm')}
             />
             <TouchableOpacity
-              onPress={()=>this.showEMode('datetime')}
+              onPress={()=>this.showEMode('time')}
               activeOpacity={1}>
               <Text><Icon name="calendar" size={20} color="black"/></Text>
             </TouchableOpacity>

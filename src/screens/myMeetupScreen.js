@@ -77,13 +77,15 @@ export default class MyMeetupScreen extends React.Component {
 
   renderItem = data => {
     return (
-      <View style={[styles.card, s.shadowStyle, s.spaceBetween]}>
-        <Text style={[s.ft14BoldBlack, s.flex20]}>{data.item._data.name}</Text>
-        <Text style={[s.ft14300Gray, s.flex40]}>{data.item._data.stime}-{data.item._data.etime}</Text>
-        <Text style={[s.ft14300Gray, s.flex30]}>{data.item._data.address}</Text>
-        <TouchableOpacity onPress={()=>this.onDetail(data.item.id)}>
-          <Text style={s.ft14blue}>Detail</Text>
-        </TouchableOpacity>
+      <View style={[styles.card, s.shadowStyle]}>
+        <View style={[s.spaceBetween, s.mb10]}>
+          <Text style={[s.ft14BoldBlack, s.flex80]}>{data.item._data.name}</Text>
+          <TouchableOpacity onPress={()=>this.onDetail(data.item.id)}>
+            <Text style={s.ft14blue}>Detail</Text>
+          </TouchableOpacity>
+        </View>     
+        <Text style={[s.ft14300Gray, s.mb10]}>Duration:  {data.item._data.stime}-{data.item._data.etime}</Text>
+        <Text style={[s.ft14300Gray]}>Location:  {data.item._data.address}</Text>
       </View>
     )
   }
@@ -175,7 +177,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     marginBottom: 18,
-    flexDirection: 'row',
     width: '100%',
     backgroundColor: '#fff',
     shadowColor: 'rgba(157, 157, 157, 0.2);',
