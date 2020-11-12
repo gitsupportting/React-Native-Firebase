@@ -18,6 +18,50 @@ export default class ConfirmScreen extends React.Component {
     };
   }
 
+  /** upload image to Google Storage
+  *
+  * convert file into blob for Google Cloud Storage: 
+  *    create a new XMLHttpRequest and set its responseType to 'blob',
+  * then open the connection and retrieve the URI's data (the image) with GET
+  *
+  * @async
+  *  @type {InnerFunctions.uploadImage}
+  *  @param {string} uri
+  *  @returns {object}
+  * 
+  * 
+  */
+  uploadImage = async(uri) => {
+    try {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                resolve(xhr.response);
+            };
+            xhr.onerror = (e) => {
+                console.log(e);
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', uri, true);
+            xhr.send(null);
+        });
+
+        /* create a reference to a file you want to operate on.  "storage" 
+        is the Google Storage parent container for all our files there.
+        */
+      let imageName = 'profilePic' + new Date();
+        const ref = storage().ref().child(imageName);
+        await ref.put(blob);
+
+        blob.close();
+        
+        return await storage().ref(imageName).getDownloadURL();
+    } catch(error) {
+        console.log(error);
+    }
+  };
+
   handleVerifyCode = () => {
     // Request for OTP verification
     this.setState({isLoading: true})
@@ -28,7 +72,7 @@ export default class ConfirmScreen extends React.Component {
         .confirm(verificationCode)
         .then(async(user) => {
           this.setState({ 
-            userId: user.user._user.uid,
+            uid: user.user._user.uid,
            });
           if (this.state.fromLogin) {
             var isReg = false;
@@ -43,7 +87,8 @@ export default class ConfirmScreen extends React.Component {
                   userData = {
                     'firstName': user.firstName,
                     'lastName': user.lastName,
-                    'phone': user.phone
+                    'phone': user.phone,
+                    'url': user.avatarSource
                   }
                   AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {
                     this.props.navigation.navigate('Home');
@@ -56,9 +101,10 @@ export default class ConfirmScreen extends React.Component {
             }
             
           } else {
+            const url = await this.uploadImage(this.props.navigation.state.params.avatarSource);
             let userDatas = {
               phone: this.props.navigation.state.params.phone,
-              avatarSource: this.props.navigation.state.params.avatarSource,
+              avatarSource: url,
               nickname: this.props.navigation.state.params.nickname,
               school: this.props.navigation.state.params.school,
               firstName: this.props.navigation.state.params.firstName,
@@ -73,7 +119,8 @@ export default class ConfirmScreen extends React.Component {
                 let userData = {	
                   'firstName': this.props.navigation.state.params.firstName,	
                   'lastName': this.props.navigation.state.params.lastName,	
-                  'phone': this.props.navigation.state.params.phone	
+                  'phone': this.props.navigation.state.params.phone,
+                  'url': url
                 }	
                 AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {	
                   this.props.navigation.navigate('Home');	

@@ -52,7 +52,7 @@ export default class ProfileEdit extends React.Component {
     })
     const options = {
       title: 'Select Avatar',
-      quality:0.2,
+      quality:1,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -73,9 +73,7 @@ export default class ProfileEdit extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        this.setState({
-          avatarSource: 'data:image/jpeg;base64,' + response.data,
-        });
+        this.setState({avatarSource: response.uri});
       }
     });
   }
@@ -92,12 +90,53 @@ export default class ProfileEdit extends React.Component {
     });
   }
 
+  /** upload image to Google Storage
+  *
+  * convert file into blob for Google Cloud Storage: 
+  *    create a new XMLHttpRequest and set its responseType to 'blob',
+  * then open the connection and retrieve the URI's data (the image) with GET
+  *
+  * @async
+  *  @type {InnerFunctions.uploadImage}
+  *  @param {string} uri
+  *  @returns {object}
+  * 
+  * 
+  */
+  uploadImage = async(uri) => {
+    try {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                resolve(xhr.response);
+            };
+            xhr.onerror = (e) => {
+                console.log(e);
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', uri, true);
+            xhr.send(null);
+        });
+
+        /* create a reference to a file you want to operate on.  "storage" 
+        is the Google Storage parent container for all our files there.
+        */
+      let imageName = 'profilePic' + new Date();
+        const ref = storage().ref().child(imageName);
+        await ref.put(blob);
+
+        blob.close();
+        
+        return await storage().ref(imageName).getDownloadURL();
+    } catch(error) {
+        console.log(error);
+    }
+  };
+
   onUpdate =async()=> {
     const {phone, firstName, lastName, nickname, school, favorite, avatarSource} = this.state;
-    // const url = await storage()
-    //   .ref(avatarSource)
-    //   .getDownloadURL();
-    // console.warn(url);
+    const url = await this.uploadImage(avatarSource);
     let userDatas = {
       phone: phone,
       firstName: firstName,
@@ -105,7 +144,7 @@ export default class ProfileEdit extends React.Component {
       nickname: nickname,
       school: school,
       favorite: favorite,
-      avatarSource: avatarSource
+      avatarSource: url
     };
     
     try {
@@ -135,7 +174,8 @@ export default class ProfileEdit extends React.Component {
                   let userData = {	
                     'firstName': firstName,	
                     'lastName': lastName,	
-                    'phone': phone	
+                    'phone': phone,
+                    'url': url
                   }	
                   AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {	
                     alert("successfully updated");
@@ -231,7 +271,7 @@ export default class ProfileEdit extends React.Component {
                 style={ [s.inputText, s.w70]}
               />  
             </View>            
-            <View style={[styles.itemWrap]}>
+            {/* <View style={[styles.itemWrap]}>
               <Text style={[s.ft15RegularBlack, s.flex30]}>Phone</Text>
               <TextInput
                 placeholder="Phone"
@@ -240,7 +280,7 @@ export default class ProfileEdit extends React.Component {
                 value={this.state.phone}
                 style={ [s.inputText, s.w70]}
               />  
-            </View>
+            </View> */}
             <View style={[styles.itemWrap]}>
               <Text style={[s.ft15RegularBlack, s.flex30]}>School</Text>
               <TextInput

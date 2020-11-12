@@ -56,7 +56,7 @@ export default class SignupScreen extends React.Component {
     })
     const options = {
       title: 'Select Avatar',
-      quality: 0.2,
+      quality: 1,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -77,12 +77,54 @@ export default class SignupScreen extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        this.setState({
-          avatarSource: 'data:image/jpeg;base64,' + response.data,
-        });
+        this.setState({avatarSource: response.uri})
       }
     });
   }
+
+  /** upload image to Google Storage
+  *
+  * convert file into blob for Google Cloud Storage: 
+  *    create a new XMLHttpRequest and set its responseType to 'blob',
+  * then open the connection and retrieve the URI's data (the image) with GET
+  *
+  * @async
+  *  @type {InnerFunctions.uploadImage}
+  *  @param {string} uri
+  *  @returns {object}
+  * 
+  * 
+  */
+  uploadImage = async(uri) => {
+    try {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                resolve(xhr.response);
+            };
+            xhr.onerror = (e) => {
+                console.log(e);
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', uri, true);
+            xhr.send(null);
+        });
+
+        /* create a reference to a file you want to operate on.  "storage" 
+        is the Google Storage parent container for all our files there.
+        */
+      let imageName = 'profilePic' + new Date();
+        const ref = storage().ref().child(imageName);
+        await ref.put(blob);
+
+        blob.close();
+        
+        return await storage().ref(imageName).getDownloadURL();
+    } catch(error) {
+        console.log(error);
+    }
+  };
 
   onValueChange(value) {
     this.setState({
@@ -121,12 +163,10 @@ export default class SignupScreen extends React.Component {
           this.setState({isLoading: false});	
         });	
       } else {
-        // const url = await storage()
-        //   .ref(avatarSource)
-        //   .getDownloadURL();
+        const url = await this.uploadImage(avatarSource);
         let userDatas = {
           phone: phone,
-          avatarSource: avatarSource,
+          avatarSource: url,
           nickname: nickname,
           school: school,
           firstName: firstName,
@@ -142,7 +182,8 @@ export default class SignupScreen extends React.Component {
             let userData = {	
               'firstName': firstName,	
               'lastName': lastName,	
-              'phone': phone
+              'phone': phone,
+              'url': url
             }	
             AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {	
               this.props.navigation.navigate('Home');	

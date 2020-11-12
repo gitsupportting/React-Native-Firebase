@@ -175,6 +175,11 @@ export default class MeetupDetailScreen extends React.Component {
               activeOpacity={1}>
               <Image source={editBtn} style={s.icon20}/>
             </TouchableOpacity> */}
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Chat', {id: this.state.id})}
+              activeOpacity={1}>
+              <Image source={chat} style={s.icon30}/>
+            </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row'}}>
             <View style={s.flex30}>

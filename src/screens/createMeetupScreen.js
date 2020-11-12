@@ -19,8 +19,10 @@ export default class CreateMeetupScreen extends React.Component {
     super(props)
     this.state = {
       active: false,
+      date: new Date(),
       stime: new Date(),
       etime: new Date(),
+      showd: false,
       showe: false,
       shows: false,
       byo: false,
@@ -56,13 +58,17 @@ export default class CreateMeetupScreen extends React.Component {
   }
 
   validation = () => {
-    const {name, address, stime, etime} = this.state
+    const {name, address, stime, etime, date} = this.state
     if (!name || name.length == 0) {
       alert('Please insert name')
       return false
     }
     if (!address || address.length == 0) {
       alert('Please insert location')
+      return false
+    }
+    if (!date || date.length == 0) {
+      alert('Please insert date')
       return false
     }
     if (!stime || stime.length == 0) {
@@ -83,14 +89,14 @@ export default class CreateMeetupScreen extends React.Component {
     //   lastName: this.state.lastName,
     //   isActive: true
     // });
-    const { name, address, stime, etime, players, maxPlayers, rules, byo, provided, phone, coordinates } = this.state
+    const { name, address, date, stime, etime, players, maxPlayers, rules, byo, provided, phone, coordinates } = this.state
     if (this.validation()) {
       let meetupData = {
         phone: phone,
         name: name,
         address: address,
         coordinates: coordinates,
-        date: moment(stime).format('YYYY-MM-DD'),
+        date: moment(date).format('YYYY-MM-DD'),
         stime: moment(stime).format('HH:mm'),        
         etime: moment(etime).format('HH:mm'),
         players: players,
@@ -99,7 +105,6 @@ export default class CreateMeetupScreen extends React.Component {
         byo: byo,
         provided: provided,
       }
-
       firestore()
         .collection('meetups')
         .add(meetupData)
@@ -112,6 +117,20 @@ export default class CreateMeetupScreen extends React.Component {
         })
     }
   }
+
+  onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.date;
+    if (Platform.OS === 'ios') {
+      this.setState({
+        date: currentDate
+      })
+    } else {
+      this.setState({
+        date: currentDate,
+        showd: false
+      })
+    }
+  };
 
   onSTimeChange = (event, selectedDate) => {
     const currentDate = selectedDate || this.state.stime;
@@ -139,6 +158,13 @@ export default class CreateMeetupScreen extends React.Component {
         showe: false
       })
     }
+  };
+
+  showDMode = (currentMode) => {
+    this.setState({
+      showd: !this.state.showd,
+      mode: currentMode
+    })
   };
 
   showSMode = (currentMode) => {
@@ -215,6 +241,33 @@ export default class CreateMeetupScreen extends React.Component {
             }}
             style={[s.inputText, s.mb20]}
           />
+
+          <Text style={[s.ft14300Gray, styles.mt25, styles.textLeft]}>Date</Text>
+          <View style={styles.itemWrap}>
+            <TextInput
+              placeholder="Date"              
+              autoCapitalize='none'
+              editable={false}
+              style={ [s.inputText, s.flex90]}
+              value={moment(this.state.date).format('YYYY-MM-DD')}
+            />
+            <TouchableOpacity
+              onPress={()=>this.showDMode('date')}
+              activeOpacity={1}>
+              <Text><Icon name="calendar" size={20} color="black"/></Text>
+            </TouchableOpacity>
+          </View>
+
+          {this.state.showd && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={this.state.date}
+              mode={this.state.mode}
+              is24Hour={true}
+              display="default"
+              onChange={this.onDateChange}
+            />
+          )}
           
           <Text style={[s.ft14300Gray, styles.mt25, styles.textLeft]}>Start Time</Text>
           <View style={styles.itemWrap}>
