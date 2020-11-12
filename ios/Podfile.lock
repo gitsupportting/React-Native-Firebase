@@ -238,6 +238,9 @@ PODS:
   - Firebase/Firestore (6.34.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 1.19.0)
+  - Firebase/Storage (6.34.0):
+    - Firebase/CoreOnly
+    - FirebaseStorage (~> 3.9.1)
   - FirebaseAuth (6.9.2):
     - FirebaseCore (~> 6.10)
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
@@ -264,6 +267,9 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 1.30906.0)
+  - FirebaseStorage (3.9.1):
+    - FirebaseCore (~> 6.10)
+    - GTMSessionFetcher/Core (~> 1.1)
   - Flipper (0.54.0):
     - Flipper-Folly (~> 2.2)
     - Flipper-RSocket (~> 1.1)
@@ -625,6 +631,10 @@ PODS:
     - Firebase/Firestore (~> 6.34.0)
     - React-Core
     - RNFBApp
+  - RNFBStorage (7.4.11):
+    - Firebase/Storage (~> 6.34.0)
+    - React-Core
+    - RNFBApp
   - RNGestureHandler (1.8.0):
     - React
   - RNInAppBrowser (3.5.1):
@@ -695,6 +705,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
+  - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -713,6 +724,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseFirestore
+    - FirebaseStorage
     - Flipper
     - Flipper-DoubleConversion
     - Flipper-Folly
@@ -804,6 +816,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/auth"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
+  RNFBStorage:
+    :path: "../node_modules/@react-native-firebase/storage"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNInAppBrowser:
@@ -829,6 +843,7 @@ SPEC CHECKSUMS:
   FirebaseCore: d3a978a3cfa3240bf7e4ba7d137fdf5b22b628ec
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
   FirebaseFirestore: 9b2f1b9b9a6f2f0b6fb7484b9e32ab7e39243554
+  FirebaseStorage: 15e0f15ef3c7fec3d1899d68623e47d4447066b4
   Flipper: be611d4b742d8c87fbae2ca5f44603a02539e365
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: e4493b013c02d9347d5e0cb4d128680239f6c78a
@@ -878,6 +893,7 @@ SPEC CHECKSUMS:
   RNFBApp: 7eacc7da7ab19f96c05e434017d44a9f09410da8
   RNFBAuth: 552aa1fe908c433e12a59ed167a7c2695efa19e7
   RNFBFirestore: 09a65d56413b9e11ab550f5f7e27106312c5fb7e
+  RNFBStorage: 70f4fd4eaf43de4563498fc97c8479cb12ffdf60
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNInAppBrowser: 48b95ba7a4eaff5cc223bca338d3e319561dbd1b
   RNScreens: 4b488fdf9537bbce829e2910c8cce1d17f6d9be8

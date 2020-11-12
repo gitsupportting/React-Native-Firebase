@@ -79,7 +79,6 @@ export default class ChatScreen extends React.Component {
           if (!firebaseData.system) {
             data.user = {
               ...firebaseData.user,
-              // name: firebaseData.user.email
             };
           }
 
@@ -244,7 +243,7 @@ export default class ChatScreen extends React.Component {
         <Footer>
           <FooterTab style={s.footerContent}>
             <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
-            <Button onPress={() => this.props.navigation.navigate('Chat')}><Image source={chat} style={s.icon30}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('SingleChat')}><Image source={chat} style={s.icon30}/></Button>
           </FooterTab>
         </Footer>
       </Container>
