@@ -33,26 +33,26 @@ export default class MeetupDetailScreen extends React.Component {
         lastName: JSON.parse(res).lastName,
       })
     });
-    setTimeout(() => {
-      Geolocation.getCurrentPosition(
-        (location) => {
-          this.setState({
-            region: {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-              latitudeDelta: 1,
-              longitudeDelta: 1, 
-            },
-            isMapReady: true,
-            error:null,
-          });
-        },
-        (error) => {
-          this.setState({error: error.message}); 
-          console.log('there', error)},
-        { enableHighAccuracy: false, timeout: 20000, maximumAge: 3600000 },
-      )
-    }, 1000);
+    // setTimeout(() => {
+    //   Geolocation.getCurrentPosition(
+    //     (location) => {
+    //       this.setState({
+    //         region: {
+    //           latitude: location.coords.latitude,
+    //           longitude: location.coords.longitude,
+    //           latitudeDelta: 1,
+    //           longitudeDelta: 1, 
+    //         },
+    //         isMapReady: true,
+    //         error:null,
+    //       });
+    //     },
+    //     (error) => {
+    //       this.setState({error: error.message}); 
+    //       console.log('there', error)},
+    //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 3600000 },
+    //   )
+    // }, 2000);
   }
 
   getMeetupData =async(id)=> {    
@@ -62,6 +62,16 @@ export default class MeetupDetailScreen extends React.Component {
       this.setState({
         meetupData: querySnapshot._data,
       }, ()=>{
+        this.setState({          
+          // region: {
+          //   latitude: Number(this.state.meetupData.coordinates.split(',')[0]),
+          //   longitude: Number(this.state.meetupData.coordinates.split(',')[1]),
+          //   latitudeDelta: 0.01,
+          //   longitudeDelta: 0.01, 
+          // },
+          isMapReady: true,
+          error:null,
+        })
         this.getUsers(this.state.meetupData.players)
       })
     });
@@ -199,7 +209,7 @@ export default class MeetupDetailScreen extends React.Component {
               mapType={Platform.OS == "android" ? "none" : "standard"}
             >
               <Marker 
-                coordinate = {this.state.region} title={"I am here."}
+                coordinate = {this.state.region} title={this.state.meetupData.address}
                 >
                 <Image source={require('../assets/location.gif')} style={{height: 15, width:15 }} />
               </Marker>
