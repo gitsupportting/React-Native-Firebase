@@ -40,8 +40,8 @@ export default class MeetupDetailScreen extends React.Component {
     //         region: {
     //           latitude: location.coords.latitude,
     //           longitude: location.coords.longitude,
-    //           latitudeDelta: 1,
-    //           longitudeDelta: 1, 
+    //           latitudeDelta: 0.01,
+    //           longitudeDelta: 0.01, 
     //         },
     //         isMapReady: true,
     //         error:null,
@@ -66,8 +66,8 @@ export default class MeetupDetailScreen extends React.Component {
           // region: {
           //   latitude: Number(this.state.meetupData.coordinates.split(',')[0]),
           //   longitude: Number(this.state.meetupData.coordinates.split(',')[1]),
-          //   latitudeDelta: 0.01,
-          //   longitudeDelta: 0.01, 
+          //   latitudeDelta: 0.0005,
+          //   longitudeDelta: 0.0005, 
           // },
           isMapReady: true,
           error:null,
@@ -209,7 +209,7 @@ export default class MeetupDetailScreen extends React.Component {
               mapType={Platform.OS == "android" ? "none" : "standard"}
             >
               <Marker 
-                coordinate = {this.state.region} title={this.state.meetupData.address}
+                coordinate = {this.state.region} title='We have a meet up in here'
                 >
                 <Image source={require('../assets/location.gif')} style={{height: 15, width:15 }} />
               </Marker>
