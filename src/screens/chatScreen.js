@@ -6,6 +6,7 @@ import { Container, Header, Content, Text, Footer, FooterTab, Button } from 'nat
 import { View, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 var s = require('../assets/css/styles');
+import backBtn from '../assets/icons/backBtn.png';
 import home from '../assets/icons/home1.png'
 import chat from '../assets/icons/chat1.png'
 import more from '../assets/icons/more.png';
@@ -16,7 +17,9 @@ export default class ChatScreen extends React.Component {
     this.state = {
       active: false,
       messages: [],
-      id: this.props.navigation.state.params.id
+      id: this.props.navigation.state.params.id,
+      name: this.props.navigation.state.params.name,
+      date: this.props.navigation.state.params.date
     };
   }
 
@@ -60,6 +63,7 @@ export default class ChatScreen extends React.Component {
         url: JSON.parse(res).url,
       })
     })
+
     const messagesListener = firestore()
       .collection('meetups')
       .doc(this.state.id)
@@ -168,10 +172,12 @@ export default class ChatScreen extends React.Component {
         <Header style={s.headerContent}>
           <View style={s.spaceBetween}>
             <TouchableOpacity
-              style={s.headerLeft}
+              onPress={() => this.props.navigation.goBack()}
+              style={{width:40, marginRight:15}}
               activeOpacity={1}>
+              <Image source={backBtn} style={s.backIcon}/>
             </TouchableOpacity>
-            <Text style={s.title}>Chat</Text>
+            <Text style={s.title}>{this.state.name} - {this.state.date}</Text>
             <TouchableOpacity
               style={s.moreIcon}
               onPress={() => this.setState({ active: !this.state.active })}

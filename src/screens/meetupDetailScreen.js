@@ -176,7 +176,7 @@ export default class MeetupDetailScreen extends React.Component {
               <Image source={editBtn} style={s.icon20}/>
             </TouchableOpacity> */}
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Chat', {id: this.state.id})}
+              onPress={() => this.props.navigation.navigate('Chat', {id: this.state.id, name: this.state.meetupData.name, date: this.state.meetupData.date})}
               activeOpacity={1}>
               <Image source={chat} style={s.icon30}/>
             </TouchableOpacity>

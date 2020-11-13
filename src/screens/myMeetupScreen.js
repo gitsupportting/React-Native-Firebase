@@ -43,7 +43,7 @@ export default class MyMeetupScreen extends React.Component {
       .then(querySnapshot => {
         querySnapshot.docs.map(item=>{
           let isEnable = false;
-          item._data.players.map(player=>{
+          item._data.players.map(player => {
             if (player.phone == phone) {
               isEnable = true;
             }
@@ -52,7 +52,7 @@ export default class MyMeetupScreen extends React.Component {
             this.state.meetups.push(item);
           }          
           count++;
-          if (querySnapshot.docs.length==count) {
+          if (querySnapshot.docs.length == count) {
             this.setState({isLoading: false})
           }
         })

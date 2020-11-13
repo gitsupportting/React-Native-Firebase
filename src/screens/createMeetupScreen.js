@@ -96,7 +96,7 @@ export default class CreateMeetupScreen extends React.Component {
         name: name,
         address: address,
         coordinates: coordinates,
-        date: moment(date).format('YYYY-MM-DD'),
+        date: moment(date).format('DD/MM/YYYY'),
         stime: moment(stime).format('HH:mm'),        
         etime: moment(etime).format('HH:mm'),
         players: players,
@@ -249,7 +249,7 @@ export default class CreateMeetupScreen extends React.Component {
               autoCapitalize='none'
               editable={false}
               style={ [s.inputText, s.flex90]}
-              value={moment(this.state.date).format('YYYY-MM-DD')}
+              value={moment(this.state.date).format('DD/MM/YYYY')}
             />
             <TouchableOpacity
               onPress={()=>this.showDMode('date')}

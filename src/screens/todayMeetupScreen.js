@@ -17,7 +17,7 @@ export default class TodayMeetupScreen extends React.Component {
       isLoading: true,
       active: false,
       meetups: [],
-      currentDate: moment(new Date()).format('YYYY-MM-DD'),
+      currentDate: moment(new Date()).format('DD/MM/YYYY'),
     }
   }
 

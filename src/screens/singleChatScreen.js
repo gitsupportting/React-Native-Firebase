@@ -6,6 +6,7 @@ import { Container, Header, Content, Text, Footer, FooterTab, Button } from 'nat
 import { View, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 var s = require('../assets/css/styles');
+import backBtn from '../assets/icons/backBtn.png';
 import home from '../assets/icons/home1.png'
 import chat from '../assets/icons/chat1.png'
 import more from '../assets/icons/more.png';
@@ -174,8 +175,10 @@ export default class SingleChatScreen extends React.Component {
         <Header style={s.headerContent}>
           <View style={s.spaceBetween}>
             <TouchableOpacity
-              style={s.headerLeft}
+              onPress={() => this.props.navigation.goBack()}
+              style={{width:40, marginRight: 15}}
               activeOpacity={1}>
+              <Image source={backBtn} style={s.backIcon}/>
             </TouchableOpacity>
             <Text style={s.title}>Chat</Text>
             <TouchableOpacity
