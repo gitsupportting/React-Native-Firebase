@@ -1,9 +1,9 @@
 import React from 'react';
 import { GiftedChat, Bubble, Send, SystemMessage } from 'react-native-gifted-chat';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Form, Item, Picker } from 'native-base';
 import firestore from '@react-native-firebase/firestore';
 import { Container, Header, Content, Text, Footer, FooterTab, Button } from 'native-base';
-import { View, TouchableOpacity, StyleSheet, Image, Dimensions, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 var s = require('../assets/css/styles');
 import home from '../assets/icons/home1.png'
@@ -14,8 +14,15 @@ export default class SingleChatScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       active: false,
       messages: [],
+      users: [{
+        phone: null,
+        firstName: 'Select User',
+        lastName: ''
+      }],
+      selectedUser: null
     };
   }
 
@@ -28,38 +35,41 @@ export default class SingleChatScreen extends React.Component {
         url: JSON.parse(res).url,
       })
     })
-    await this.getUsersData();
-    // const messagesListener = firestore()
-    //   .collection('meetups')
-    //   .doc(this.state.id)
-    //   .collection('messages')
-    //   .orderBy('createdAt', 'desc')
-    //   .onSnapshot(querySnapshot => {
-    //     const messages = querySnapshot.docs.map(doc => {
-    //       const firebaseData = doc.data();
-    //       const data = {
-    //         _id: doc.id,
-    //         text: '',
-    //         createdAt: new Date().getTime(),
-    //         ...firebaseData
-    //       };
+    await this.getUsersData();    
+  } 
 
-    //       if (!firebaseData.system) {
-    //         data.user = {
-    //           ...firebaseData.user,
-    //         };
-    //       }
+  async getMessages() {
+    const messagesListener = firestore()
+      .collection('chats')
+      .doc(this.state.id)
+      .collection('messages')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(querySnapshot => {
+        const messages = querySnapshot.docs.map(doc => {
+          const firebaseData = doc.data();
+          const data = {
+            _id: doc.id,
+            text: '',
+            createdAt: new Date().getTime(),
+            ...firebaseData
+          };
 
-    //       return data;
-    //     });
-    //     this.setState({
-    //       messages: messages,
-    //     })
-    //   });
+          if (!firebaseData.system) {
+            data.users = {
+              ...firebaseData.users,
+            };
+          }
 
-    // // Stop listening for updates whenever the component unmounts
-    // return () => messagesListener();
-  }
+          return data;
+        });
+        this.setState({
+          messages: messages,
+        })
+      });
+
+    // Stop listening for updates whenever the component unmounts
+    return () => messagesListener();
+  }  
 
   getUsersData = async () => {
     await firestore()
@@ -67,27 +77,79 @@ export default class SingleChatScreen extends React.Component {
       .get()
       .then(querySnapshot => {
         querySnapshot.docs.map(item=>{
-          console.log(item);
+          if (item._data.phone != this.state.phone) {
+            this.state.users.push(item._data);
+          }
         })
+        this.setState({isLoading : false})
       })
+  }
+
+  onValueChange (value) {
+    this.setState({
+      selectedUser: value
+    }, async()=>{
+      if (this.state.selectedUser) {
+        await this.getChannelId(this.state.phone, this.state.selectedUser);
+      }      
+    });
+  }
+
+  renderOptions () {
+    return this.state.users.map((dt, i) => {
+      return (
+        <Picker.Item label={dt.firstName + ' ' + dt.lastName} value={dt.phone} key={i}/>
+      )
+    })
+  } 
+
+  async getChannelId (phone, selectedUser) { 
+    let count = 0;   
+    let isExisting = false;
+    await firestore()
+      .collection('chats')
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.docs.map(item=>{
+          if (item._data.users.includes(phone) && item._data.users.includes(selectedUser)) {
+            isExisting = true;
+            this.setState({id: item.id}, async()=>{
+              await this.getMessages(); 
+            })
+          }
+          count++;         
+        })
+        if (querySnapshot.docs.length == 0 || (count == querySnapshot.docs.length && isExisting == false)) {
+          firestore()
+            .collection('chats')
+            .add({users: [phone, selectedUser]})
+            .then((res) => {
+              this.setState({id: res.id}, async()=>{
+                await this.getMessages(); 
+              })
+            })
+            .catch(err=>{
+              alert(err);
+            })
+        }       
+      }) 
   }
 
   async handleSend(messages) {
     const text = messages[0].text;
-
-    // firestore()
-    //   .collection('meetups')
-    //   .doc(this.state.id)
-    //   .collection('messages')
-    //   .add({
-    //     text,
-    //     createdAt: new Date().getTime(),
-    //     user: {
-    //       _id: this.state.phone,
-    //       name: this.state.firstName,
-    //       avatar: this.state.url,
-    //     }
-    //   });
+    firestore()
+      .collection('chats')
+      .doc(this.state.id)
+      .collection('messages')
+      .add({
+        text,
+        createdAt: new Date().getTime(),
+        user: {
+          _id: this.state.phone,
+          name: this.state.firstName,
+          avatar: this.state.url,
+        }
+      });
   }
 
   onProfile =()=> {
@@ -107,7 +169,6 @@ export default class SingleChatScreen extends React.Component {
   }
 
   render() {
-    
     return (
       <Container style={s.container}>
         <Header style={s.headerContent}>
@@ -140,14 +201,39 @@ export default class SingleChatScreen extends React.Component {
               </View>
             }
           </View>            
-        </Header>       
-        <View style={ styles.chatMain}>
-          <GiftedChat
-            messages={this.state.messages}
-            onSend={messages => this.handleSend(messages)}
-            user={{ _id: this.state.phone,}}
-          />
-        </View>
+        </Header> 
+        {this.state.isLoading ? (
+            <View style={s.loader}>
+              <ActivityIndicator size='large' color='#0c9' />
+            </View>
+          ) : (
+            <View style={ styles.chatMain}>
+              {this.state.users.length>0 && 
+              <View style={[s.spaceBetween, s.mb20]}>
+                <Text style={[s.ft14300Gray, s.w30, styles.textLeft]}>Chat With</Text>
+                <Form style={s.w70}>
+                  <Item picker>
+                    <Picker
+                      mode="dropdown"
+                      placeholder="Select Favorite Sport"
+                      placeholderStyle={s.inputText}
+                      placeholderIconColor="#007aff"
+                      selectedValue={this.state.selectedUser}
+                      onValueChange={this.onValueChange.bind(this)}
+                    >                
+                      {this.renderOptions()}
+                    </Picker>
+                  </Item>
+                </Form>
+              </View>        
+              }            
+              <GiftedChat
+                messages={this.state.messages}
+                onSend={messages => this.handleSend(messages)}
+                user={{ _id: this.state.phone,}}
+              />
+            </View>
+          )}        
         <Footer>
           <FooterTab style={s.footerContent}>
             <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
