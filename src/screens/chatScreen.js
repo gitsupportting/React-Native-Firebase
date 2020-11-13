@@ -3,13 +3,12 @@ import { GiftedChat, Bubble, Send, SystemMessage } from 'react-native-gifted-cha
 import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
 import { Container, Header, Content, Text, Footer, FooterTab, Button } from 'native-base';
-import { View, TouchableOpacity, StyleSheet, Image, Dimensions, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 var s = require('../assets/css/styles');
 import home from '../assets/icons/home1.png'
 import chat from '../assets/icons/chat1.png'
 import more from '../assets/icons/more.png';
-let {height, width} = Dimensions.get('window');
 
 export default class ChatScreen extends React.Component {
   constructor(props) {
@@ -107,28 +106,6 @@ export default class ChatScreen extends React.Component {
     AsyncStorage.setItem('userData', 'logout').then(() => {
       this.props.navigation.navigate('Login');
     });
-  }
-
-  onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
-
-    const text = messages[0].text;
-
-    firestore()
-      .collection('meetups')
-      .doc(this.state.id)
-      .collection('messages')
-      .add({
-        text,
-        createdAt: new Date().getTime(),
-        user: {
-          phone: this.state.phone,
-          name: this.state.firstName,
-          avatar: this.state.url,
-        }
-      });
   }
 
   renderBubble() {
