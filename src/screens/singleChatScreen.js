@@ -23,7 +23,8 @@ export default class SingleChatScreen extends React.Component {
         firstName: 'Select User',
         lastName: ''
       }],
-      selectedUser: null
+      selectedUser: this.props.navigation.state.params.phone,
+      name: this.props.navigation.state.params.name,
     };
   }
 
@@ -34,9 +35,11 @@ export default class SingleChatScreen extends React.Component {
         firstName: JSON.parse(res).firstName,
         lastName: JSON.parse(res).lastName,
         url: JSON.parse(res).url,
+      }, async()=>{
+        await this.getChannelId(this.state.phone, this.state.selectedUser);
       })
     })
-    await this.getUsersData();    
+    
   } 
 
   async getMessages() {
@@ -65,74 +68,29 @@ export default class SingleChatScreen extends React.Component {
         });
         this.setState({
           messages: messages,
+          isLoading: false
         })
       });
 
     // Stop listening for updates whenever the component unmounts
     return () => messagesListener();
-  }  
-
-  getUsersData = async () => {
-    await firestore()
-      .collection('users')
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.docs.map(item=>{
-          if (item._data.phone != this.state.phone) {
-            this.state.users.push(item._data);
-          }
-        })
-        this.setState({isLoading : false})
-      })
-  }
-
-  onValueChange (value) {
-    this.setState({
-      selectedUser: value
-    }, async()=>{
-      if (this.state.selectedUser) {
-        await this.getChannelId(this.state.phone, this.state.selectedUser);
-      }      
-    });
-  }
-
-  renderOptions () {
-    return this.state.users.map((dt, i) => {
-      return (
-        <Picker.Item label={dt.firstName + ' ' + dt.lastName} value={dt.phone} key={i}/>
-      )
-    })
-  } 
+  }   
 
   async getChannelId (phone, selectedUser) { 
-    let count = 0;   
-    let isExisting = false;
+    
     await firestore()
       .collection('chats')
       .get()
       .then(querySnapshot => {
         querySnapshot.docs.map(item=>{
           if (item._data.users.includes(phone) && item._data.users.includes(selectedUser)) {
-            isExisting = true;
             this.setState({id: item.id}, async()=>{
               await this.getMessages(); 
             })
           }
           count++;         
         })
-        if (querySnapshot.docs.length == 0 || (count == querySnapshot.docs.length && isExisting == false)) {
-          firestore()
-            .collection('chats')
-            .add({users: [phone, selectedUser]})
-            .then((res) => {
-              this.setState({id: res.id}, async()=>{
-                await this.getMessages(); 
-              })
-            })
-            .catch(err=>{
-              alert(err);
-            })
-        }       
+        
       }) 
   }
 
@@ -151,6 +109,18 @@ export default class SingleChatScreen extends React.Component {
           avatar: this.state.url,
         }
       });
+    await firestore()
+      .collection('chats')
+      .doc(this.state.id)
+      .set(
+        {
+          latestMessage: {
+            text,
+            createdAt: new Date().getTime()
+          }
+        },
+        { merge: true }
+      );
   }
 
   onProfile =()=> {
@@ -180,7 +150,7 @@ export default class SingleChatScreen extends React.Component {
               activeOpacity={1}>
               <Image source={backBtn} style={s.backIcon}/>
             </TouchableOpacity>
-            <Text style={s.title}>Chat</Text>
+            <Text style={s.title}>{this.state.name}</Text>
             <TouchableOpacity
               style={s.moreIcon}
               onPress={() => this.setState({ active: !this.state.active })}
@@ -211,25 +181,6 @@ export default class SingleChatScreen extends React.Component {
             </View>
           ) : (
             <View style={ styles.chatMain}>
-              {this.state.users.length>0 && 
-              <View style={[s.spaceBetween, s.mb20]}>
-                <Text style={[s.ft14300Gray, s.w30, styles.textLeft]}>Chat With</Text>
-                <Form style={s.w70}>
-                  <Item picker>
-                    <Picker
-                      mode="dropdown"
-                      placeholder="Select Favorite Sport"
-                      placeholderStyle={s.inputText}
-                      placeholderIconColor="#007aff"
-                      selectedValue={this.state.selectedUser}
-                      onValueChange={this.onValueChange.bind(this)}
-                    >                
-                      {this.renderOptions()}
-                    </Picker>
-                  </Item>
-                </Form>
-              </View>        
-              }            
               <GiftedChat
                 messages={this.state.messages}
                 onSend={messages => this.handleSend(messages)}
@@ -240,7 +191,7 @@ export default class SingleChatScreen extends React.Component {
         <Footer>
           <FooterTab style={s.footerContent}>
             <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
-            <Button onPress={() => this.props.navigation.navigate('SingleChat')}><Image source={chat} style={s.icon30}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('SingleChatList')}><Image source={chat} style={s.icon30}/></Button>
           </FooterTab>
         </Footer>
       </Container>

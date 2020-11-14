@@ -9,6 +9,7 @@ import profileDetailScreen from './screens/profileDetailScreen'
 import profileEditScreen from './screens/profileEditScreen'
 import homeScreen from './screens/homeScreen'
 import chatScreen from './screens/chatScreen'
+import singleChatListScreen from './screens/singleChatListScreen'
 import singleChatScreen from './screens/singleChatScreen'
 import CreateMeetupScreen from './screens/createMeetupScreen'
 import MeetupDetailScreen from './screens/meetupDetailScreen'
@@ -39,6 +40,9 @@ const Navigation = createStackNavigator({
   },
   Chat: {
     screen: chatScreen
+  },
+  SingleChatList: {
+    screen: singleChatListScreen
   },
   SingleChat: {
     screen: singleChatScreen

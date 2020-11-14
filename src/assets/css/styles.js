@@ -194,6 +194,10 @@ module.exports = StyleSheet.create({
     margin: 20,
   },
 
+  mt10: {
+    marginTop: 10
+  },
+
   mt20: {
     marginTop: 20,
   },
