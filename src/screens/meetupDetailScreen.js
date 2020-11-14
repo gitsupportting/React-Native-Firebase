@@ -63,12 +63,12 @@ export default class MeetupDetailScreen extends React.Component {
         meetupData: querySnapshot._data,
       }, ()=>{
         this.setState({          
-          // region: {
-          //   latitude: Number(this.state.meetupData.coordinates.split(',')[0]),
-          //   longitude: Number(this.state.meetupData.coordinates.split(',')[1]),
-          //   latitudeDelta: 0.0005,
-          //   longitudeDelta: 0.0005, 
-          // },
+          region: {
+            latitude: Number(this.state.meetupData.coordinates.split(',')[0]),
+            longitude: Number(this.state.meetupData.coordinates.split(',')[1]),
+            latitudeDelta: 0.0005,
+            longitudeDelta: 0.0005, 
+          },
           isMapReady: true,
           error:null,
         })
