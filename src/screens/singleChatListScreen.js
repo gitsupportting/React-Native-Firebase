@@ -5,6 +5,7 @@ import { Container, Header, Content, Text, Footer, FooterTab, Button } from 'nat
 import { View, TouchableOpacity, StyleSheet, Image, ActivityIndicator, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 var s = require('../assets/css/styles');
+import Icon from 'react-native-vector-icons/Ionicons';
 import backBtn from '../assets/icons/backBtn.png';
 import home from '../assets/icons/home1.png'
 import chat from '../assets/icons/chat1.png'
@@ -173,9 +174,14 @@ export default class SingleChatListScreen extends React.Component {
           <View style={s.flex80}>
             <View style={[s.spaceBetween]}>
               <Text style={[s.ft14BoldBlack, s.flex80]}>{data.item.firstName} {data.item.lastName}</Text>
-              <TouchableOpacity onPress={()=>this.onChat(data.item.phone, data.item.firstName, data.item.lastName)}>
-                <Image source={chat} style={s.icon20}/>
-              </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity onPress={()=>this.onChat(data.item.phone, data.item.firstName, data.item.lastName)} style={{marginRight: 10}}>
+                  <Image source={chat} style={s.icon25}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>this.onChat(data.item.phone, data.item.firstName, data.item.lastName)}>
+                  <Icon name='trash-outline' size={20} color='#173147' />
+                </TouchableOpacity>                
+              </View>              
             </View>   
             {data.item.latestMessage && 
             <View style={[s.spaceBetween, s.mt10]}>
@@ -251,7 +257,7 @@ export default class SingleChatListScreen extends React.Component {
                   <Text style={s.ft14blue}>Add</Text>
                 </TouchableOpacity>
               </View>        
-              }
+              }              
               <View>
                 {this.state.chats.length>0 ? (
                   <FlatList

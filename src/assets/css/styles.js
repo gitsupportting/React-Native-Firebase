@@ -142,6 +142,11 @@ module.exports = StyleSheet.create({
     height: 20,
   },
 
+  icon25: {
+    width: 25,
+    height: 25,
+  },
+
   icon15: {
     width: 15,
     height: 15,
