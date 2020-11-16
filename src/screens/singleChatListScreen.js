@@ -37,7 +37,7 @@ export default class SingleChatListScreen extends React.Component {
       })
     })
     await this.getUsersData();
-    await this.getChatData();
+    this.getChatData();
   }
 
   getUsersData = () => {
@@ -66,13 +66,13 @@ export default class SingleChatListScreen extends React.Component {
       .collection('chats')
       .get()
       .then(querySnapshot => {
-        querySnapshot.docs.map(item=>{
+        querySnapshot.docs.map(item=> {
           const index = item._data.users.indexOf(this.state.phone);
           if (index > -1) {
             this.getUserbyPhone(item._data.users.splice(index-1, 1)[0], item._data.latestMessage ? item._data.latestMessage : null)
           }
-        })
-        this.setState({isLoading : false})
+        }) 
+        this.setState({isLoading: false})
       })
   }
 
@@ -113,7 +113,37 @@ export default class SingleChatListScreen extends React.Component {
 
   onChat =  (phone, firstName, lastName) => {
     let name = firstName + ' ' + lastName;
-    this.props.navigation.navigate('SingleChat', {phone: phone, name: name})
+    this.setState({isLoading: false}, ()=>{
+      this.props.navigation.navigate('SingleChat', {phone: phone, name: name})
+    })    
+  }
+
+  onDelete = async(selectedUser)=> { 
+    this.setState({isLoading: true});
+    const {phone} = this.state;
+    await firestore()
+      .collection('chats')
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.docs.map(item=>{
+          if (item._data.users.includes(phone) && item._data.users.includes(selectedUser)) {
+            firestore()
+              .collection('chats')
+              .doc(item.id)
+              .delete()
+              .then(() => {
+                this.state.chats.map(item=> {                  
+                  if (item.phone == selectedUser) {
+                    const index = this.state.chats.indexOf(item);
+                    this.state.chats.splice(index, 1);
+                    this.setState({isLoading: false});   
+                  }
+                })
+                  alert('Successfully deleted!');
+              });
+          }
+        })        
+      })     
   }
 
   validation = () => {
@@ -138,16 +168,19 @@ export default class SingleChatListScreen extends React.Component {
     if (this.validation()) {
       this.setState({isLoading: true});
       const { phone, selectedUser } = this.state;
-          firestore()
-            .collection('chats')
-            .add({users: [phone, selectedUser]})
-            .then(async(res) => {
-              await this.getChatData();
-            })
-            .catch(err=>{
-              alert(err);
-            })
-        }       
+
+      firestore()
+        .collection('chats')
+        .add({users: [phone, selectedUser]})
+        .then((res) => {
+          this.setState({chats: []}, ()=> {
+            this.getChatData();
+          })          
+        })
+        .catch(err=>{
+          alert(err);
+        })
+    }       
   }
 
   onProfile =()=> {
@@ -178,7 +211,7 @@ export default class SingleChatListScreen extends React.Component {
                 <TouchableOpacity onPress={()=>this.onChat(data.item.phone, data.item.firstName, data.item.lastName)} style={{marginRight: 10}}>
                   <Image source={chat} style={s.icon25}/>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>this.onChat(data.item.phone, data.item.firstName, data.item.lastName)}>
+                <TouchableOpacity onPress={()=>this.onDelete(data.item.phone)}>
                   <Icon name='trash-outline' size={20} color='#173147' />
                 </TouchableOpacity>                
               </View>              

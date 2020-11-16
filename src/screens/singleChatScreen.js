@@ -88,7 +88,6 @@ export default class SingleChatScreen extends React.Component {
               await this.getMessages(); 
             })
           }
-          count++;         
         })
         
       }) 
@@ -145,7 +144,7 @@ export default class SingleChatScreen extends React.Component {
         <Header style={s.headerContent}>
           <View style={s.spaceBetween}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('SingleChatList')}
+              onPress={() => this.props.navigation.goBack()}
               style={{width:40, marginRight: 15}}
               activeOpacity={1}>
               <Image source={backBtn} style={s.backIcon}/>
