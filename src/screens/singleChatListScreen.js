@@ -82,7 +82,7 @@ export default class SingleChatListScreen extends React.Component {
   }
 
   timeSince(timeStamp) {
-    // timeStamp = now.getTime()-timeStamp + now.getTime()
+    var d = new Date(timeStamp);
     var now = new Date();
     let secondsPast = (now.getTime() - timeStamp) / 1000;
     if (secondsPast < 60) {
@@ -95,9 +95,9 @@ export default class SingleChatListScreen extends React.Component {
       return parseInt(secondsPast / 3600) + 'h';
     }
     if (secondsPast > 86400) {
-      let day = timeStamp.getDate();
-      let month = timeStamp.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
-      let year = timeStamp.getFullYear() == now.getFullYear() ? "" : " " + timeStamp.getFullYear();
+      let day = d.getDate();
+      let month = d.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
+      let year = d.getFullYear() == now.getFullYear() ? "" : " " + d.getFullYear();
       return day + " " + month + year;
     }
   }
@@ -180,7 +180,7 @@ export default class SingleChatListScreen extends React.Component {
             {data.item.latestMessage && 
             <View style={[s.spaceBetween, s.mt10]}>
               <Text style={[s.ft14300Gray, s.flex80]}>{data.item.latestMessage.text}</Text>
-              {/* <Text style={[s.ft14300Gray]}>{this.timeSince(data.item.latestMessage.createdAt)}</Text> */}
+              <Text style={[s.ft14300Gray]}>{this.timeSince(data.item.latestMessage.createdAt)}</Text>
             </View>
             }  
           </View>          
@@ -307,8 +307,8 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   avatar30: {
-    width: 30, 
-    height: 30, 
-    borderRadius: 15
+    width: 40, 
+    height: 40, 
+    borderRadius: 20
   }
 })
