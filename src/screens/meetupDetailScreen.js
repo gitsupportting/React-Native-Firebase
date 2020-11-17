@@ -3,6 +3,7 @@ import { StyleSheet, Image, TouchableOpacity, ActivityIndicator, Platform, FlatL
 import { Container, Header, Content, Text, View, FooterTab, Footer, Button } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 import  MapView,{Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import home from '../assets/icons/home1.png'
@@ -24,7 +25,7 @@ export default class MeetupDetailScreen extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount () {
     this.getMeetupData(this.state.id);
     AsyncStorage.getItem('userData').then(res => {
       this.setState({
@@ -33,6 +34,15 @@ export default class MeetupDetailScreen extends React.Component {
         lastName: JSON.parse(res).lastName,
       })
     });
+    
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    if (enabled) {
+      console.warn('Authorization status:', authStatus);
+    }
+
     // setTimeout(() => {
     //   Geolocation.getCurrentPosition(
     //     (location) => {
