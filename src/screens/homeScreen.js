@@ -1,7 +1,9 @@
 import React from 'react';
 import { Container, Header, Content, Text, Footer, FooterTab, Button } from 'native-base';
-import { View, TouchableOpacity, StyleSheet, Image, BackHandler } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, BackHandler, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 var s = require('../assets/css/styles');
 import home from '../assets/icons/home1.png'
 import chat from '../assets/icons/chat1.png'
@@ -13,6 +15,15 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {active: false};
   }
+
+  async componentDidMount () {       
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    return unsubscribe;
+  }
+
+
 
   componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
@@ -41,7 +52,7 @@ export default class HomeScreen extends React.Component {
     AsyncStorage.setItem('userData', 'logout').then(() => {
       this.props.navigation.navigate('Login');
     });
-  }
+  }  
 
   render() {
     
@@ -79,7 +90,7 @@ export default class HomeScreen extends React.Component {
           </View>            
         </Header>
         <Content style={s.mainContainer}>
-          <Image source={Logo}/>
+          {/* <Image source={Logo}/> */}
           <Text style={[s.mv60, s.title, s.txCenter]}>What do you want to do today?</Text>
           <TouchableOpacity
             style={s.btnActive}

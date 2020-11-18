@@ -4,6 +4,7 @@ import { Container, Header, Content, Text, View, FooterTab, Footer, Button } fro
 import AsyncStorage from '@react-native-community/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
+import 'firebase/firestore'
 import  MapView,{Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import home from '../assets/icons/home1.png'
@@ -34,14 +35,6 @@ export default class MeetupDetailScreen extends React.Component {
         lastName: JSON.parse(res).lastName,
       })
     });
-    
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    if (enabled) {
-      console.warn('Authorization status:', authStatus);
-    }
 
     // setTimeout(() => {
     //   Geolocation.getCurrentPosition(
@@ -96,7 +89,6 @@ export default class MeetupDetailScreen extends React.Component {
         querySnapshot.docs.map(doc => {
           let user = doc.data();
           let nonReg = true;
-          console.warn(user);
           players.map(player=>{
             if (user.phone == player.phone) {
               nonReg = false;
@@ -152,6 +144,33 @@ export default class MeetupDetailScreen extends React.Component {
         this.setState({isLoading: false})
       })
   }
+
+  // onAdd = (player) => {
+  //   firestore()
+  //     .collection('users')
+  //     .where('phone', '==', player.phone)
+  //     .get()
+  //     .then(querySnapshot => {
+  //       let member = querySnapshot.docs[0]._data;
+  //       console.log(messaging())
+  //       messaging().sendToDevice(
+  //         member.tokens, // ['token_1', 'token_2', ...]
+  //         {
+  //           data: {
+  //             member: JSON.stringify(member),
+  //             from: this.state.firstName + " " + this.state.lastName,
+  //             meetup: this.state.meetupData.name
+  //           },
+  //         },
+  //         {
+  //           // Required for background/quit data-only messages on iOS
+  //           contentAvailable: true,
+  //           // Required for background/quit data-only messages on Android
+  //           priority: 'high',
+  //         },
+  //       );
+  //     })
+  // }
 
   renderNonRegItem = data => {
     return (

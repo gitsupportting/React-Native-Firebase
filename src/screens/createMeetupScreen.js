@@ -216,7 +216,7 @@ export default class CreateMeetupScreen extends React.Component {
           </View>
         </Header>
         <Content style={s.mainContainer}>
-          <Text style={[s.title, s.txCenter]}>Create your game now!</Text>
+          <Text style={[s.title, s.txCenter]}>Create your Meet Up now!</Text>
           <Text style={[s.ft14300Gray, s.mv15, styles.textLeft]}>Name</Text>
           <TextInput
             onChangeText={name => this.setState({name})}

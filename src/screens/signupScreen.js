@@ -17,6 +17,7 @@ export default class SignupScreen extends React.Component {
       isLoading: false,
       signupFromLogin: this.props.navigation.state.params.signupFromLogin,	
       phone: this.props.navigation.state.params.phone,
+      tokens: this.props.navigation.state.params.tokens ? this.props.navigation.state.params.tokens : null,
       avatarSource: null,
       firstName: '',
       lastName: '',
@@ -47,7 +48,7 @@ export default class SignupScreen extends React.Component {
         }
       }
       requestCameraPermission();
-    }
+    }    
   }
 
   handleUploadPhoto = () => {
@@ -134,7 +135,7 @@ export default class SignupScreen extends React.Component {
 
   onSignup = async () => {	
     
-    const {firstName, lastName, nickname, avatarSource, favorite, phone, school, signupFromLogin} = this.state;	
+    const {firstName, lastName, nickname, avatarSource, favorite, phone, school, signupFromLogin, tokens} = this.state;	
     if (this.validation()) {
       this.setState({isLoading: true});
       if (signupFromLogin) {	
@@ -171,7 +172,8 @@ export default class SignupScreen extends React.Component {
           school: school,
           firstName: firstName,
           lastName: lastName,
-          favorite: favorite        
+          favorite: favorite,
+          tokens: tokens
         }
 
         firestore()

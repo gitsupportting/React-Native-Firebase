@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 var s = require('../assets/css/styles');
 import backBtn from '../assets/icons/backBtn.png';
 import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 
 export default class ConfirmScreen extends React.Component {
   constructor(props) {
@@ -16,6 +17,12 @@ export default class ConfirmScreen extends React.Component {
       fromLogin: this.props.navigation.state.params.fromLogin,
       isLoading: false
     };
+  }
+
+  componentDidMount () {
+    messaging().getToken().then(token => {
+      this.setState({tokens: firestore.FieldValue.arrayUnion(token)._elements[0][1]});
+    });
   }
 
   /** upload image to Google Storage
@@ -65,7 +72,7 @@ export default class ConfirmScreen extends React.Component {
   handleVerifyCode = () => {
     // Request for OTP verification
     this.setState({isLoading: true})
-    const { confirmResult, verificationCode } = this.state;
+    const { confirmResult, verificationCode, tokens } = this.state;
     
     if (verificationCode.length == 6) {
       confirmResult
@@ -77,11 +84,12 @@ export default class ConfirmScreen extends React.Component {
           if (this.state.fromLogin) {
             var isReg = false;
             let userData = {};
+
             await firestore().collection('users')
             .where('phone', '==', this.state.phone)
             .get()
             .then(querySnapshot => {
-                querySnapshot.docs.map(doc => {
+                querySnapshot.docs.map((doc) => {                  
                   let user = doc.data();
                   isReg = true;
                   userData = {
@@ -90,14 +98,17 @@ export default class ConfirmScreen extends React.Component {
                     'phone': user.phone,
                     'url': user.avatarSource
                   }
-                  AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {
-                    this.props.navigation.navigate('Home');
-                  });
+                  firestore().collection("users").doc(doc.id).update({tokens: tokens})
+                  .then(()=>{
+                    AsyncStorage.setItem('userData', JSON.stringify(userData)).then(() => {
+                      this.props.navigation.navigate('Home');
+                    });
+                  })
                 });
             });
             
             if (!isReg) {
-              this.props.navigation.navigate('Signup', {signupFromLogin: false, phone: this.state.phone});
+              this.props.navigation.navigate('Signup', {signupFromLogin: false, phone: this.state.phone, tokens: this.state.tokens});
             }
             
           } else {
@@ -109,7 +120,8 @@ export default class ConfirmScreen extends React.Component {
               school: this.props.navigation.state.params.school,
               firstName: this.props.navigation.state.params.firstName,
               lastName: this.props.navigation.state.params.lastName,
-              favorite: this.props.navigation.state.params.favorite        
+              favorite: this.props.navigation.state.params.favorite,
+              tokens: tokens
             }
             firestore()
               .collection('users')
