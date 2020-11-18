@@ -34,7 +34,6 @@ module.exports = StyleSheet.create({
 
   moreIcon: {
     width: 80,
-    height: 10,
     justifyContent: 'flex-end',
     flexDirection: 'row',
   },
@@ -117,10 +116,8 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
   },
   activeTxt: {
-    fontFamily: 'Lato-Regular',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 14,
+    fontFamily: 'Lato-Bold',
+    fontSize: 16,
     lineHeight: 17,
     color: '#FFFFFF',
     textAlign: 'center',
@@ -209,6 +206,10 @@ module.exports = StyleSheet.create({
 
   mt40: {
     marginTop: 40
+  },
+
+  mt60: {
+    marginTop: 60
   },
 
   mv60: {
@@ -300,6 +301,12 @@ module.exports = StyleSheet.create({
     fontWeight: 'bold' 
   },
 
+  ft16blue:{ 
+    fontSize: 16, 
+    color: '#2684ff', 
+    fontWeight: 'bold' 
+  },
+
   ft20Black: {
     fontFamily: 'Lato-Regular',
     fontStyle: 'normal',
@@ -310,7 +317,7 @@ module.exports = StyleSheet.create({
   },
 
   title: {
-    fontSize: 17,
+    fontSize: 19,
     color: '#2F2F2F',
     fontFamily: 'Lato-Bold',
     lineHeight: 20,

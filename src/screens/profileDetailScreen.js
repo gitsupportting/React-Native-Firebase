@@ -51,13 +51,6 @@ export default class ProfileDetail extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={s.loader}>
-          <ActivityIndicator size="large" color="#0c9" />
-        </View>
-      )
-    }
     return (
       <Container style={s.container}>
         <Header style={s.headerContent}>
@@ -71,43 +64,49 @@ export default class ProfileDetail extends React.Component {
             <Text style={s.title}>My Profile</Text>
             <View style={{width:15}}></View>
           </View>          
-        </Header>
-        <Content style={s.mainContainer}>
-          <View style={s.spaceBetween}>
-            <Text style={s.ft17Gray}>{this.state.firstName} {this.state.lastName}</Text>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('ProfileEdit')}
-              style={{width:15, marginRight:5}}
-              activeOpacity={1}>
-              <Image source={editBtn} style={s.icon20}/>
-            </TouchableOpacity>
-          </View>
-          {this.state.avatarSource && <View style={[s.flexCenter, s.mt20]}>
-            <Image source={{ uri: this.state.avatarSource }} style={s.avatar} />
-          </View>}
-          <View style={{flexDirection: 'row', marginVertical:30}}>
-            <View style={s.flex30}>
-              <Text style={[s.ft14BoldBlack, s.mb10]}>First Name</Text>
-              <Text style={[s.ft14BoldBlack, s.mb10]}>Last Name</Text>
-              <Text style={[s.ft14BoldBlack, s.mb10]}>Nick Name</Text>
-              <Text style={[s.ft14BoldBlack, s.mb10]}>Phone</Text>
-              <Text style={[s.ft14BoldBlack, s.mb10]}>School</Text>
-              <Text style={[s.ft14BoldBlack, s.mb10]}>Favorite Sport</Text>
+        </Header>       
+        {this.state.isLoading ? (
+            <View style={s.loader}>
+              <ActivityIndicator size='large' color='#0c9' />
             </View>
-            <View style={s.flex70}>
-              <Text style={[s.ft14300Gray, s.mb10]}>{this.state.firstName}</Text>
-              <Text style={[s.ft14300Gray, s.mb10]}>{this.state.lastName}</Text>
-              <Text style={[s.ft14300Gray, s.mb10]}>{this.state.nickname}</Text>
-              <Text style={[s.ft14300Gray, s.mb10]}>{this.state.phone}</Text>
-              <Text style={[s.ft14300Gray, s.mb10]}>{this.state.school}</Text>
-              <Text style={[s.ft14300Gray, s.mb10]}>{this.state.favorite}</Text>
-            </View>
-          </View>
-          <View style={s.splitLine}></View>
-          <TouchableOpacity style={{marginVertical: 15}} onPress={this.onLogout} activeOpacity={1}>
-            <Text style={s.ft14blue}>Log Out</Text>
-          </TouchableOpacity>
-        </Content>
+          ) : (
+            <Content style={s.mainContainer}>        
+              <View style={s.spaceBetween}>
+                <Text style={s.ft17Gray}>{this.state.firstName} {this.state.lastName}</Text>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('ProfileEdit')}
+                  style={{width:15, marginRight:5}}
+                  activeOpacity={1}>
+                  <Image source={editBtn} style={s.icon20} />
+                </TouchableOpacity>
+              </View>
+              {this.state.avatarSource && <View style={[s.flexCenter, s.mt20]}>
+                <Image source={{ uri: this.state.avatarSource }} style={s.avatar} />
+              </View>}
+              <View style={{flexDirection: 'row', marginVertical:30}}>
+                <View style={s.flex30}>
+                  <Text style={[s.ft14BoldBlack, s.mb15]}>First Name</Text>
+                  <Text style={[s.ft14BoldBlack, s.mb15]}>Last Name</Text>
+                  <Text style={[s.ft14BoldBlack, s.mb15]}>Nick Name</Text>
+                  <Text style={[s.ft14BoldBlack, s.mb15]}>Phone</Text>
+                  <Text style={[s.ft14BoldBlack, s.mb15]}>School</Text>
+                  <Text style={[s.ft14BoldBlack, s.mb15]}>Favorite Sport</Text>
+                </View>
+                <View style={s.flex70}>
+                  <Text style={[s.ft14300Gray, s.mb15]}>{this.state.firstName}</Text>
+                  <Text style={[s.ft14300Gray, s.mb15]}>{this.state.lastName}</Text>
+                  <Text style={[s.ft14300Gray, s.mb15]}>{this.state.nickname}</Text>
+                  <Text style={[s.ft14300Gray, s.mb15]}>{this.state.phone}</Text>
+                  <Text style={[s.ft14300Gray, s.mb15]}>{this.state.school}</Text>
+                  <Text style={[s.ft14300Gray, s.mb15]}>{this.state.favorite}</Text>
+                </View>
+              </View>
+              <View style={s.splitLine}></View>
+              <TouchableOpacity style={{marginVertical: 15}} onPress={this.onLogout} activeOpacity={1}>
+                <Text style={s.ft16blue}>Log Out</Text>
+              </TouchableOpacity>
+            </Content>
+          )}         
       </Container >
     );
   }

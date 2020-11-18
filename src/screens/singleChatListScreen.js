@@ -9,14 +9,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import backBtn from '../assets/icons/backBtn.png';
 import home from '../assets/icons/home1.png'
 import chat from '../assets/icons/chat1.png'
-import more from '../assets/icons/more.png';
 
 export default class SingleChatListScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      active: false,
       chats: [],
       users: [{
         phone: null,
@@ -183,17 +181,7 @@ export default class SingleChatListScreen extends React.Component {
     }       
   }
 
-  onProfile =()=> {
-    this.setState({
-      active: false
-    });
-    this.props.navigation.navigate('ProfileDetail')
-  }
-
   onLogout =()=> {
-    this.setState({
-      active: false
-    });
     AsyncStorage.setItem('userData', 'logout').then(() => {
       this.props.navigation.navigate('Login');
     });
@@ -242,26 +230,10 @@ export default class SingleChatListScreen extends React.Component {
             <Text style={s.title}>Chat</Text>
             <TouchableOpacity
               style={s.moreIcon}
-              onPress={() => this.setState({ active: !this.state.active })}
+              onPress={() =>this.onLogout()}
               activeOpacity={1}>
-              <Image source={more}/>
+              <Icon name='log-out' size={24} color='#173147' />
             </TouchableOpacity>
-            {this.state.active && 
-              <View style={s.shadowBtn}>
-                <TouchableOpacity
-                  style={s.profileBtn}
-                  onPress={() =>this.onProfile()}
-                  activeOpacity={1}>
-                  <Text style={s.ft15RegularBlack}>Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={s.formBtn}
-                  onPress={() =>this.onLogout()}
-                  activeOpacity={1}>
-                  <Text style={s.ft15RegularBlack}>Logout</Text>
-                </TouchableOpacity>
-              </View>
-            }
           </View>            
         </Header> 
         {this.state.isLoading ? (
@@ -308,7 +280,7 @@ export default class SingleChatListScreen extends React.Component {
         <Footer>
           <FooterTab style={s.footerContent}>
             <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
-            <Button onPress={() => this.props.navigation.navigate('SingleChatList')}><Image source={chat} style={s.icon30}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('ProfileDetail')}><Icon name='person' size={24} color='#173147' /></Button>
           </FooterTab>
         </Footer>
       </Container>

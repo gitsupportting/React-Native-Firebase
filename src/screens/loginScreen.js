@@ -23,7 +23,7 @@ export default class LoginScreen extends React.Component {
       auth()
         .signInWithPhoneNumber(this.state.phone)
         .then(confirmResult => {
-          this.setState({ confirmResult }, ()=>{
+          this.setState({ confirmResult }, ()=> {
             this.setState({
               isLoading: false
             }, ()=>{
@@ -58,7 +58,7 @@ export default class LoginScreen extends React.Component {
         <Text style={[s.title, s.mb50]}>LOGIN</Text>
         <Text style={[s.ft14300Gray, s.mv25, styles.textLeft]}>Phone</Text>
         <TextInput
-          placeholder="+1"
+          placeholder="+"
           onChangeText={(phone) => this.setState({ phone })}
           autoCapitalize='none'
           value={this.state.phone}

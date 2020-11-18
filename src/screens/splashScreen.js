@@ -12,7 +12,7 @@ export default class SplashScreen extends React.Component {
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
     if (enabled) {
-      console.warn('Authorization status:', authStatus);
+      console.log('Authorization status:', authStatus);
     };    
     AsyncStorage.getItem('userData').then((res)=>{
       if (res =="logout" || !res) {

@@ -174,7 +174,7 @@ export default class ConfirmScreen extends React.Component {
           activeOpacity={1}>
           <Image source={backBtn} style={s.backIcon}/>
         </TouchableOpacity>
-        <Text style={s.title}>ENTER CONFIRMATION CODE</Text>
+        <Text style={s.ft17Gray}>ENTER CONFIRMATION CODE</Text>
         <TextInput
           placeholder="confirm code"
           onChangeText={(verificationCode) => this.setState({ verificationCode })}
@@ -202,6 +202,6 @@ const styles = StyleSheet.create({
   backBtn: {
     position: 'absolute',
     left: 25,
-    top: 40,
+    top: 60,
   }
 })

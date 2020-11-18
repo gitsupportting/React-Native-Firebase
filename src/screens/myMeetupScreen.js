@@ -4,11 +4,9 @@ import { View, TouchableOpacity, StyleSheet, Image, FlatList, ActivityIndicator 
 import AsyncStorage from '@react-native-community/async-storage'
 import 'firebase/firestore'
 import firestore from '@react-native-firebase/firestore'
-var s = require('../assets/css/styles')
+var s = require('../assets/css/styles');
+import Icon from 'react-native-vector-icons/Ionicons';
 import home from '../assets/icons/home1.png'
-import chat from '../assets/icons/chat1.png'
-import more from '../assets/icons/more.png'
-import home1 from '../assets/icons/home.png'
 
 export default class MyMeetupScreen extends React.Component {
   constructor (props) {
@@ -16,7 +14,6 @@ export default class MyMeetupScreen extends React.Component {
     this.state = {
       isLoading: true,
       meetups: [],
-      active: false,
     }
   }
 
@@ -59,17 +56,7 @@ export default class MyMeetupScreen extends React.Component {
       })
   }
 
-  onProfile = () => {
-    this.setState({
-      active: false,
-    })
-    this.props.navigation.navigate('ProfileDetail')
-  }
-
   onLogout = () => {
-    this.setState({
-      active: false,
-    })
     AsyncStorage.setItem('userData', 'logout').then(() => {
       this.props.navigation.navigate('Login')
     })
@@ -106,34 +93,15 @@ export default class MyMeetupScreen extends React.Component {
             <Text style={s.title}>My Meet ups</Text>
             <TouchableOpacity
               style={s.moreIcon}
-              onPress={() => this.setState({active: !this.state.active})}
+              onPress={() =>this.onLogout()}
               activeOpacity={1}>
-              <Image source={more} />
+              <Icon name='log-out' size={24} color='#173147' />
             </TouchableOpacity>
-            {this.state.active && (
-              <View style={s.shadowBtn}>
-                <TouchableOpacity
-                  style={s.profileBtn}
-                  onPress={() => this.onProfile()}
-                  activeOpacity={1}>
-                  <Text style={s.ft15RegularBlack}>Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={s.formBtn}
-                  onPress={() => this.onLogout()}
-                  activeOpacity={1}>
-                  <Text style={s.ft15RegularBlack}>Logout</Text>
-                </TouchableOpacity>
-              </View>
-            )}
           </View>
         </Header>
         <Content style={s.mainContainer}>
-          <Text style={[s.title, s.mb20]}>
-            Hello {this.state.firstName} {this.state.lastName}
-          </Text>
-          <Text style={[s.ft17Gray, s.mb15]}>
-            Here is your Meet ups
+          <Text style={[s.ft17Gray, s.mb20]}>
+            Hello, {this.state.firstName} {this.state.lastName}!  Here is your Meet ups
           </Text>
           {this.state.isLoading ? (
             <View style={s.loader}>
@@ -157,7 +125,7 @@ export default class MyMeetupScreen extends React.Component {
         <Footer>
           <FooterTab style={s.footerContent}>
             <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
-            <Button onPress={() => this.props.navigation.navigate('SingleChatList')}><Image source={chat} style={s.icon30}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('ProfileDetail')}><Icon name='person' size={24} color='#173147' /></Button>
           </FooterTab>
         </Footer>
       </Container>

@@ -1,12 +1,14 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { View, TouchableOpacity, StyleSheet, TextInput, Text, KeyboardAvoidingView, ActivityIndicator, ScrollView, Image, PermissionsAndroid, Platform  } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, TextInput, Text, KeyboardAvoidingView, ActivityIndicator, ScrollView, Image, PermissionsAndroid, Platform, Dimensions  } from 'react-native';
 import { Form, Item, Picker } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import ImagePicker from 'react-native-image-picker';
 import 'firebase/firestore';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import Icon from 'react-native-vector-icons/Ionicons';
+let deviceWidth = Dimensions.get('window').width
 var s = require('../assets/css/styles');
 
 export default class SignupScreen extends React.Component {
@@ -239,14 +241,11 @@ export default class SignupScreen extends React.Component {
     }
     return (
       <KeyboardAvoidingView style={[s.loader, s.padding20]}>        
-        <Text style={s.title, s.mt40}>Create Profile</Text>
-        <View style={{ marginTop:15, marginBottom:15, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={[s.title, s.mt60]}>Create Profile</Text>
+        <View style={{ marginTop:25, alignItems: 'center', justifyContent: 'center' }}>
           {!this.state.buttonVisable &&
-            <TouchableOpacity
-              style={s.avatar}
-              onPress={this.handleUploadPhoto}
-            >
-              <Text style={{ fontSize: 20, color: '#2684ff', fontWeight: 'bold' }}>Avatar</Text>
+            <TouchableOpacity style={s.avatar} onPress={this.handleUploadPhoto}>
+              <Icon name='person-add' size={deviceWidth*0.25} color='#173147' />
             </TouchableOpacity>
           }
           {this.state.avatarSource &&

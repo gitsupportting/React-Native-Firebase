@@ -2,18 +2,14 @@ import React from 'react';
 import { Container, Header, Content, Text, Footer, FooterTab, Button } from 'native-base';
 import { View, TouchableOpacity, StyleSheet, Image, BackHandler, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import firestore from '@react-native-firebase/firestore';
+import Icon from 'react-native-vector-icons/Ionicons';
 import messaging from '@react-native-firebase/messaging';
 var s = require('../assets/css/styles');
 import home from '../assets/icons/home1.png'
-import chat from '../assets/icons/chat1.png'
-import Logo from '../assets/logo.png';
-import more from '../assets/icons/more.png';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {active: false};
   }
 
   async componentDidMount () {       
@@ -38,17 +34,7 @@ export default class HomeScreen extends React.Component {
     return true;
   };
 
-  onProfile =()=> {
-    this.setState({
-      active: false
-    });
-    this.props.navigation.navigate('ProfileDetail')
-  }
-
   onLogout =()=> {
-    this.setState({
-      active: false
-    });
     AsyncStorage.setItem('userData', 'logout').then(() => {
       this.props.navigation.navigate('Login');
     });
@@ -67,31 +53,14 @@ export default class HomeScreen extends React.Component {
             <Text style={s.title}>Home</Text>
             <TouchableOpacity
               style={s.moreIcon}
-              onPress={() => this.setState({ active: !this.state.active })}
+              onPress={() =>this.onLogout()}
               activeOpacity={1}>
-              <Image source={more}/>
+              <Icon name='log-out' size={24} color='#173147' />
             </TouchableOpacity>
-            {this.state.active && 
-              <View style={s.shadowBtn}>
-                <TouchableOpacity
-                  style={s.profileBtn}
-                  onPress={() =>this.onProfile()}
-                  activeOpacity={1}>
-                  <Text style={s.ft15RegularBlack}>Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={s.formBtn}
-                  onPress={() =>this.onLogout()}
-                  activeOpacity={1}>
-                  <Text style={s.ft15RegularBlack}>Logout</Text>
-                </TouchableOpacity>
-              </View>
-            }
           </View>            
         </Header>
         <Content style={s.mainContainer}>
-          {/* <Image source={Logo}/> */}
-          <Text style={[s.mv60, s.title, s.txCenter]}>What do you want to do today?</Text>
+          <Text style={[s.mv60, s.title, s.txCenter]}>What do you want to do today?</Text>      
           <TouchableOpacity
             style={s.btnActive}
             onPress={()=>this.props.navigation.navigate('CreateMeetup')}
@@ -110,11 +79,17 @@ export default class HomeScreen extends React.Component {
             activeOpacity={1}>
             <Text style={ s.activeTxt}>My Meet Ups</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={s.btnActive}
+            onPress={()=>this.props.navigation.navigate('SingleChatList')}
+            activeOpacity={1}>
+            <Text style={ s.activeTxt}>My Friends</Text>
+          </TouchableOpacity>
         </Content>
         <Footer>
           <FooterTab style={s.footerContent}>
             <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
-            <Button onPress={() => this.props.navigation.navigate('SingleChatList')}><Image source={chat} style={s.icon30}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('ProfileDetail')}><Icon name='person' size={24} color='#173147' /></Button>
           </FooterTab>
         </Footer>
       </Container>

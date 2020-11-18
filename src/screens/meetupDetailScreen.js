@@ -12,6 +12,7 @@ import chat from '../assets/icons/chat1.png'
 import editBtn from '../assets/icons/editIcon.png';
 import backBtn from '../assets/icons/backBtn.png';
 var s = require('../assets/css/styles');
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class MeetupDetailScreen extends React.Component {
 
@@ -184,13 +185,6 @@ export default class MeetupDetailScreen extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={s.loader}>
-          <ActivityIndicator size="large" color="#0c9" />
-        </View>
-      )
-    }
     return (
       <Container style={s.container}>
         <Header style={s.headerContent}>
@@ -205,83 +199,89 @@ export default class MeetupDetailScreen extends React.Component {
             <View style={{width:15}}></View>
           </View>          
         </Header>
-        <Content style={s.mainContainer}>
-          <View style={[s.spaceBetween, s.mb20]}>
-            <Text style={s.ft17Gray}>{this.state.meetupData.name}</Text>
-            {/* <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('MeetupEdit', {id: this.state.id})}
-              style={{width:15, marginRight:5}}
-              activeOpacity={1}>
-              <Image source={editBtn} style={s.icon20}/>
-            </TouchableOpacity> */}
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Chat', {id: this.state.id, name: this.state.meetupData.name, date: this.state.meetupData.date})}
-              activeOpacity={1}>
-              <Image source={chat} style={s.icon30}/>
-            </TouchableOpacity>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <View style={s.flex30}>
-              <Text style={[s.ft14BoldBlack, s.mb10]}>Time</Text>
-              <Text style={[s.ft14BoldBlack, s.mb10]}>Location</Text>
+        {this.state.isLoading ? (
+            <View style={s.loader}>
+              <ActivityIndicator size='large' color='#0c9' />
             </View>
-            <View style={s.flex70}>
-              <Text style={[s.ft14300Gray, s.mb10]}>{this.state.meetupData.stime} - {this.state.meetupData.etime}</Text>
-              <Text style={[s.ft14300Gray, s.mb10]}>{this.state.meetupData.address}</Text>
-            </View>
-          </View>
-          <View style={s.mv15}>
-          {this.state.isMapReady && <MapView
-              initialRegion={this.state.region}
-              OnLayout={this.onMapLayout}
-              style={ styles.mapStyle}
-              mapType={Platform.OS == "android" ? "none" : "standard"}
-            >
-              <Marker 
-                coordinate = {this.state.region} title='We have a meet up in here'
+          ) : (
+            <Content style={s.mainContainer}>
+              <View style={[s.spaceBetween, s.mb20]}>
+                <Text style={s.ft17Gray}>{this.state.meetupData.name}</Text>
+                {/* <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('MeetupEdit', {id: this.state.id})}
+                  style={{width:15, marginRight:5}}
+                  activeOpacity={1}>
+                  <Image source={editBtn} style={s.icon20}/>
+                </TouchableOpacity> */}
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('Chat', {id: this.state.id, name: this.state.meetupData.name, date: this.state.meetupData.date})}
+                  activeOpacity={1}>
+                  <Image source={chat} style={s.icon25}/>
+                </TouchableOpacity>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <View style={s.flex30}>
+                  <Text style={[s.ft14BoldBlack, s.mb10]}>Time</Text>
+                  <Text style={[s.ft14BoldBlack, s.mb10]}>Location</Text>
+                </View>
+                <View style={s.flex70}>
+                  <Text style={[s.ft14300Gray, s.mb10]}>{this.state.meetupData.stime} - {this.state.meetupData.etime}</Text>
+                  <Text style={[s.ft14300Gray, s.mb10]}>{this.state.meetupData.address}</Text>
+                </View>
+              </View>
+              <View style={s.mv15}>
+              {this.state.isMapReady && <MapView
+                  initialRegion={this.state.region}
+                  OnLayout={this.onMapLayout}
+                  style={ styles.mapStyle}
+                  mapType={Platform.OS == "android" ? "none" : "standard"}
                 >
-                <Image source={require('../assets/location.gif')} style={{height: 15, width:15 }} />
-              </Marker>
-            </MapView>}
-            {!this.state.isMapReady && <MapView
-              initialRegion={this.state.region}
-              OnLayout={this.onMapLayout}
-              style={ styles.mapStyle}
-            >
-            </MapView>}
-          </View>
-          {this.state.meetupData.players.length>0 &&
-            <Text style={[s.ft14BoldBlack, s.mb10, ]}>Added players</Text>
-          }          
-          <View>
-            <FlatList data={this.state.meetupData.players} renderItem={item => this.renderRegItem(item)}/>
-          </View>
-          {this.state.nonRegUsers.length>0 &&
-          <Text style={[s.ft14BoldBlack, s.mb10, ]}>Which player do you want to add ?</Text>
-          }
-          <View>
-            <FlatList data={this.state.nonRegUsers} renderItem={item => this.renderNonRegItem(item)}/>
-          </View>
-          <Text style={[s.ft14BoldBlack, s.mb10]}>Rules</Text>
-          <Text style={[s.ft14300Gray, s.mb20]}>{this.state.meetupData.rules}</Text>
-          {this.state.fromToday &&
-          <View>
-            <View style={s.splitLine}></View>
-            <View style={{flexDirection: 'row', justifyContent:'flex-end', marginVertical: 20}}>
-              <TouchableOpacity onPress={() => this.props.navigation.goBack()} activeOpacity={1} style={s.flex20}>
-                <Text style={s.ft14blue}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>this.onAdd({firstName: this.state.firstName, lastName: this.state.lastName, phone: this.state.phone, isActive: false}, false)} activeOpacity={1}>
-                <Text style={s.ft14blue}>Join</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          }
-        </Content>
+                  <Marker 
+                    coordinate = {this.state.region} title='We have a meet up in here'
+                    >
+                    <Image source={require('../assets/location.gif')} style={{height: 15, width:15 }} />
+                  </Marker>
+                </MapView>}
+                {!this.state.isMapReady && <MapView
+                  initialRegion={this.state.region}
+                  OnLayout={this.onMapLayout}
+                  style={ styles.mapStyle}
+                >
+                </MapView>}
+              </View>
+              {this.state.meetupData.players.length>0 &&
+                <Text style={[s.ft14BoldBlack, s.mb10, ]}>Added players</Text>
+              }          
+              <View>
+                <FlatList data={this.state.meetupData.players} renderItem={item => this.renderRegItem(item)}/>
+              </View>
+              {this.state.nonRegUsers.length>0 &&
+              <Text style={[s.ft14BoldBlack, s.mb10, ]}>Which player do you want to add ?</Text>
+              }
+              <View>
+                <FlatList data={this.state.nonRegUsers} renderItem={item => this.renderNonRegItem(item)}/>
+              </View>
+              <Text style={[s.ft14BoldBlack, s.mb10]}>Rules</Text>
+              <Text style={[s.ft14300Gray, s.mb20]}>{this.state.meetupData.rules}</Text>
+              {this.state.fromToday &&
+              <View>
+                <View style={s.splitLine}></View>
+                <View style={{flexDirection: 'row', justifyContent:'flex-end', marginVertical: 20}}>
+                  <TouchableOpacity onPress={() => this.props.navigation.goBack()} activeOpacity={1} style={s.flex20}>
+                    <Text style={s.ft14blue}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={()=>this.onAdd({firstName: this.state.firstName, lastName: this.state.lastName, phone: this.state.phone, isActive: false}, false)} activeOpacity={1}>
+                    <Text style={s.ft14blue}>Join</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              }
+            </Content>
+        )}        
         <Footer>
           <FooterTab style={s.footerContent}>
             <Button onPress={() => this.props.navigation.navigate('Home')}><Image source={home} style={s.icon20}/></Button>
-            <Button onPress={() => this.props.navigation.navigate('SingleChatList')}><Image source={chat} style={s.icon30}/></Button>
+            <Button onPress={() => this.props.navigation.navigate('ProfileDetail')}><Icon name='person' size={24} color='#173147' /></Button>
           </FooterTab>
         </Footer>
       </Container >

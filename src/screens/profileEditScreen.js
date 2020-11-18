@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity, TextInput, ActivityIndicator, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Container, Header, Content, Text, View, Form, Item, Picker } from 'native-base';
 import ImagePicker from 'react-native-image-picker';
@@ -8,6 +8,8 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import backBtn from '../assets/icons/backBtn.png';
 var s = require('../assets/css/styles');
+import Icon from 'react-native-vector-icons/Ionicons';
+let deviceWidth = Dimensions.get('window').width;
 
 export default class ProfileEdit extends React.Component {
 
@@ -195,13 +197,6 @@ export default class ProfileEdit extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={s.loader}>
-          <ActivityIndicator size="large" color="#0c9" />
-        </View>
-      )
-    }
     return (
       <Container style={s.container}>
         <Header style={s.headerContent}>
@@ -216,108 +211,112 @@ export default class ProfileEdit extends React.Component {
             <View style={{width:15}}></View>
           </View>          
         </Header>
-        <Content style={s.mainContainer}>
-          <View style={s.spaceBetween}>
-            <Text style={s.ft17Gray}>{this.state.firstName} {this.state.lastName}</Text>
-            <TouchableOpacity onPress={() => this.onUpdate()}>
-              <Text style={s.ft14blue}>Save</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={[s.flexCenter, s.mt20]}>
-            {!this.state.avatarSource &&
-              <TouchableOpacity
-                style={s.avatar}
-                onPress={this.handleUploadPhoto}
-              >
-                <Text style={{ fontSize: 20, color: '#2684ff', fontWeight: 'bold' }}>Avatar</Text>
-              </TouchableOpacity>
-            }
-            {this.state.avatarSource &&
-              <TouchableOpacity
-                style={s.avatar}
-                onPress={this.handleUploadPhoto}
-              >
-                <Image source={{ uri: this.state.avatarSource }} style={s.avatar} />
-              </TouchableOpacity>}
-          </View>
-          <View style={s.mv25}>
-            <View style={[styles.itemWrap]}>
-              <Text style={[s.ft15RegularBlack, s.flex30]}>First Name</Text>
-              <TextInput
-                placeholder="First Name"
-                onChangeText={(firstName) => this.setState({ firstName })}
-                autoCapitalize='none'
-                value={this.state.firstName}
-                style={ [s.inputText, s.w70]}
-              />  
+        {this.state.isLoading ? (
+            <View style={s.loader}>
+              <ActivityIndicator size='large' color='#0c9' />
             </View>
-            <View style={[styles.itemWrap]}>
-              <Text style={[s.ft15RegularBlack, s.flex30]}>Last Name</Text>
-              <TextInput
-                placeholder="Last Name"
-                onChangeText={(lastName) => this.setState({ lastName })}
-                autoCapitalize='none'
-                value={this.state.lastName}
-                style={ [s.inputText, s.w70]}
-              />  
-            </View>
-            <View style={[styles.itemWrap]}>
-              <Text style={[s.ft15RegularBlack, s.flex30]}>Nick Name</Text>
-              <TextInput
-                placeholder="Nick Name"
-                onChangeText={(nickname) => this.setState({ nickname })}
-                autoCapitalize='none'
-                value={this.state.nickname}
-                style={ [s.inputText, s.w70]}
-              />  
-            </View>            
-            {/* <View style={[styles.itemWrap]}>
-              <Text style={[s.ft15RegularBlack, s.flex30]}>Phone</Text>
-              <TextInput
-                placeholder="Phone"
-                onChangeText={(phone) => this.setState({ phone })}
-                autoCapitalize='none'
-                value={this.state.phone}
-                style={ [s.inputText, s.w70]}
-              />  
-            </View> */}
-            <View style={[styles.itemWrap]}>
-              <Text style={[s.ft15RegularBlack, s.flex30]}>School</Text>
-              <TextInput
-                placeholder="School"
-                onChangeText={(school) => this.setState({ school })}
-                autoCapitalize='none'
-                value={this.state.school}
-                style={ [s.inputText, s.w70 ]}
-              />  
-            </View>
-            <View style={[styles.itemWrap]}>
-              <Text style={[s.ft15RegularBlack, s.flex30]}>Favorite Sport</Text>
-              <Form style={s.flex70}>
-                <Item picker>
-                  <Picker
-                    mode="dropdown"
-                    placeholder="Select Favorite Sport"
-                    placeholderStyle={s.inputText}
-                    placeholderIconColor="#007aff"
-                    selectedValue={this.state.favorite}
-                    onValueChange={this.onValueChange.bind(this)}
+          ) : (
+            <Content style={s.mainContainer}>
+              <View style={s.spaceBetween}>
+                <Text style={s.ft17Gray}>{this.state.firstName} {this.state.lastName}</Text>
+                <TouchableOpacity onPress={() => this.onUpdate()}>
+                  <Icon name='save' size={24} color='#173147' />
+                </TouchableOpacity>
+              </View>
+              <View style={[s.flexCenter, s.mt20]}>
+                {!this.state.avatarSource &&
+                  <TouchableOpacity style={s.avatar} onPress={this.handleUploadPhoto}>
+                    <Icon name='person-add' size={deviceWidth*0.25} color='#173147' />
+                  </TouchableOpacity>
+                }
+                {this.state.avatarSource &&
+                  <TouchableOpacity
+                    style={s.avatar}
+                    onPress={this.handleUploadPhoto}
                   >
-                    <Picker.Item label="Rugby" value="Rugby"/>
-                    <Picker.Item label="Cricket" value="Cricket" />
-                    <Picker.Item label="Swimming" value="Swimming" />
-                    <Picker.Item label="Footy" value="Footy" />
-                    <Picker.Item label="Yoga" value="Yoga" />
-                  </Picker>
-                </Item>
-              </Form>
-            </View>
-          </View>
-          <View style={s.splitLine}></View>
-          <TouchableOpacity style={{marginVertical: 15}} onPress={this.onLogout} activeOpacity={1}>
-            <Text style={s.ft14blue}>Log Out</Text>
-          </TouchableOpacity>
-        </Content>
+                    <Image source={{ uri: this.state.avatarSource }} style={s.avatar} />
+                  </TouchableOpacity>}
+              </View>
+              <View style={s.mv25}>
+                <View style={[styles.itemWrap]}>
+                  <Text style={[s.ft15RegularBlack, s.flex30]}>First Name</Text>
+                  <TextInput
+                    placeholder="First Name"
+                    onChangeText={(firstName) => this.setState({ firstName })}
+                    autoCapitalize='none'
+                    value={this.state.firstName}
+                    style={ [s.inputText, s.w70]}
+                  />  
+                </View>
+                <View style={[styles.itemWrap]}>
+                  <Text style={[s.ft15RegularBlack, s.flex30]}>Last Name</Text>
+                  <TextInput
+                    placeholder="Last Name"
+                    onChangeText={(lastName) => this.setState({ lastName })}
+                    autoCapitalize='none'
+                    value={this.state.lastName}
+                    style={ [s.inputText, s.w70]}
+                  />  
+                </View>
+                <View style={[styles.itemWrap]}>
+                  <Text style={[s.ft15RegularBlack, s.flex30]}>Nick Name</Text>
+                  <TextInput
+                    placeholder="Nick Name"
+                    onChangeText={(nickname) => this.setState({ nickname })}
+                    autoCapitalize='none'
+                    value={this.state.nickname}
+                    style={ [s.inputText, s.w70]}
+                  />  
+                </View>            
+                {/* <View style={[styles.itemWrap]}>
+                  <Text style={[s.ft15RegularBlack, s.flex30]}>Phone</Text>
+                  <TextInput
+                    placeholder="Phone"
+                    onChangeText={(phone) => this.setState({ phone })}
+                    autoCapitalize='none'
+                    value={this.state.phone}
+                    style={ [s.inputText, s.w70]}
+                  />  
+                </View> */}
+                <View style={[styles.itemWrap]}>
+                  <Text style={[s.ft15RegularBlack, s.flex30]}>School</Text>
+                  <TextInput
+                    placeholder="School"
+                    onChangeText={(school) => this.setState({ school })}
+                    autoCapitalize='none'
+                    value={this.state.school}
+                    style={ [s.inputText, s.w70 ]}
+                  />  
+                </View>
+                <View style={[styles.itemWrap]}>
+                  <Text style={[s.ft15RegularBlack, s.flex30]}>Favorite Sport</Text>
+                  <Form style={s.flex70}>
+                    <Item picker>
+                      <Picker
+                        mode="dropdown"
+                        placeholder="Select Favorite Sport"
+                        placeholderStyle={s.inputText}
+                        placeholderIconColor="#007aff"
+                        selectedValue={this.state.favorite}
+                        onValueChange={this.onValueChange.bind(this)}
+                      >
+                        <Picker.Item label="Rugby" value="Rugby"/>
+                        <Picker.Item label="Cricket" value="Cricket" />
+                        <Picker.Item label="Swimming" value="Swimming" />
+                        <Picker.Item label="Footy" value="Footy" />
+                        <Picker.Item label="Yoga" value="Yoga" />
+                      </Picker>
+                    </Item>
+                  </Form>
+                </View>
+              </View>
+              <View style={s.splitLine}></View>
+              <TouchableOpacity style={{marginVertical: 15}} onPress={this.onLogout} activeOpacity={1}>
+                <Text style={s.ft16blue}>Log Out</Text>
+              </TouchableOpacity>
+            </Content>
+        )}
+        
       </Container >
     );
   }
