@@ -9,7 +9,6 @@ import  MapView,{Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import home from '../assets/icons/home1.png'
 import chat from '../assets/icons/chat1.png'
-import editBtn from '../assets/icons/editIcon.png';
 import backBtn from '../assets/icons/backBtn.png';
 var s = require('../assets/css/styles');
 import Icon from 'react-native-vector-icons/Ionicons';

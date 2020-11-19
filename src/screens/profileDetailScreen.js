@@ -3,7 +3,7 @@ import { StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-na
 import { Container, Header, Content, Text, View } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import firestore from '@react-native-firebase/firestore';
-import editBtn from '../assets/icons/editIcon.png';
+import Icon from 'react-native-vector-icons/Ionicons';
 import backBtn from '../assets/icons/backBtn.png';
 var s = require('../assets/css/styles');
 
@@ -75,9 +75,9 @@ export default class ProfileDetail extends React.Component {
                 <Text style={s.ft17Gray}>{this.state.firstName} {this.state.lastName}</Text>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('ProfileEdit')}
-                  style={{width:15, marginRight:5}}
+                  style={{width:25, marginRight:5}}
                   activeOpacity={1}>
-                  <Image source={editBtn} style={s.icon20} />
+                  <Icon name='create' size={24} color='#173147' />
                 </TouchableOpacity>
               </View>
               {this.state.avatarSource && <View style={[s.flexCenter, s.mt20]}>

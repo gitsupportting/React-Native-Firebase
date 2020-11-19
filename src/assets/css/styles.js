@@ -216,6 +216,10 @@ module.exports = StyleSheet.create({
     marginVertical: 60,
   },
 
+  mv40: {
+    marginVertical: 40,
+  },
+
   mv25: {
     marginVertical: 25,
   },
