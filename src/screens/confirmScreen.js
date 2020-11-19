@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, TextInput, Text, Image, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, TextInput, Text, Image, ActivityIndicator, ImageBackground, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 var s = require('../assets/css/styles');
 import backBtn from '../assets/icons/backBtn.png';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
+import Zocial from 'react-native-vector-icons/Zocial';
+let deviceHeight = Dimensions.get('window').height
+let deviceWidth = Dimensions.get('window').width
 
 export default class ConfirmScreen extends React.Component {
   constructor(props) {
@@ -167,28 +170,34 @@ export default class ConfirmScreen extends React.Component {
       )
     }
     return (
-      <View style={[s.loader, s.padding20]}>
+      <ImageBackground style={[s.loader, s.padding20, s.image]}>
         <TouchableOpacity
           style={styles.backBtn}
           onPress={this.onBack}
           activeOpacity={1}>
           <Image source={backBtn} style={s.backIcon}/>
         </TouchableOpacity>
-        <Text style={s.ft17Gray}>ENTER CONFIRMATION CODE</Text>
-        <TextInput
-          placeholder="confirm code"
-          onChangeText={(verificationCode) => this.setState({ verificationCode })}
-          autoCapitalize='none'
-          value={this.state.verificationCode}
-          style={ [s.inputText, s.mv60] }
-        />        
-        <TouchableOpacity
-          style={s.btnActive}
-          onPress={this.handleVerifyCode}
-          activeOpacity={1}>
-          <Text style={ s.activeTxt}>Submit</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={{height: 0.4*deviceHeight, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+          <Zocial name='meetup' size={0.3*deviceWidth} color='#173147' style={{width: 0.5*deviceWidth, textAlign: "center"}}/>
+          {/* <View><Text style={[s.title, {color: 'white'}]}>Enter code</Text></View> */}
+        </View>
+        <View style={{height: 0.5*deviceHeight, width: deviceWidth*0.9}}>
+          <Text style={[s.ft14300Gray, styles.textLeft, {marginBottom: 10}]}>Enter your confirmation code</Text>
+          <TextInput
+            placeholder="confirm code"
+            onChangeText={(verificationCode) => this.setState({ verificationCode })}
+            autoCapitalize='none'
+            value={this.state.verificationCode}
+            style={ [s.inputText, s.mb20] }
+          />        
+          <TouchableOpacity
+            style={s.btnActive}
+            onPress={this.handleVerifyCode}
+            activeOpacity={1}>
+            <Text style={ s.activeTxt}>Submit</Text>
+          </TouchableOpacity>
+        </View>        
+      </ImageBackground>
     );
   }
 }

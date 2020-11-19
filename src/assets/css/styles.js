@@ -56,6 +56,12 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  },
+
   txCenter: {
     width: '100%',
     textAlign: 'center',

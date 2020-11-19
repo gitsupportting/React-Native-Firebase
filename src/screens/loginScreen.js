@@ -1,7 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, TextInput, Text, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, TextInput, Text, ActivityIndicator, ImageBackground, Dimensions } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import Zocial from 'react-native-vector-icons/Zocial';
 var s = require('../assets/css/styles');
+import bg from '../assets/bg.png'
+let deviceHeight = Dimensions.get('window').height
+let deviceWidth = Dimensions.get('window').width
 
 export default class LoginScreen extends React.Component {
   constructor(props) {
@@ -54,28 +58,34 @@ export default class LoginScreen extends React.Component {
       )
     }
     return (
-      <View style={[s.loader, s.padding20]}>
-        <Text style={[s.title, s.mb50]}>LOGIN</Text>
-        <Text style={[s.ft14300Gray, s.mv25, styles.textLeft]}>Phone</Text>
-        <TextInput
-          placeholder="+"
-          onChangeText={(phone) => this.setState({ phone })}
-          autoCapitalize='none'
-          value={this.state.phone}
-          style={[s.inputText, s.mb50] }
-        />        
-        <TouchableOpacity
-          style={s.btnActive}
-          onPress={this.onSendCode}
-          activeOpacity={1}>
-          <Text style={ s.activeTxt}>Send Code</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={this.onSignup}
-          activeOpacity={1}>
-          <Text style={styles.lineBtnTxt}>New here? Create an account.</Text>
-        </TouchableOpacity>
-      </View>
+      <ImageBackground style={[s.loader, s.padding20, s.image]}>
+        <View style={{height: 0.4*deviceHeight, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+          <Zocial name='meetup' size={0.3*deviceWidth} color='#173147' style={{width: 0.5*deviceWidth, textAlign: "center"}}/>
+          <View><Text style={[s.title]}>Login to meetup</Text></View>
+        </View>
+        <View style={{height: 0.5*deviceHeight, width: deviceWidth*0.9}}>
+          <Text style={[s.ft14300Gray, styles.textLeft, {marginBottom: 10}]}>Enter your Phone number</Text>
+          <TextInput
+            placeholder="+"
+            onChangeText={(phone) => this.setState({ phone })}
+            autoCapitalize='none'
+            value={this.state.phone}
+            style={[s.inputText, s.mb20] }
+          />        
+          <TouchableOpacity
+            style={s.btnActive}
+            onPress={this.onSendCode}
+            activeOpacity={1}>
+            <Text style={ s.activeTxt}>Send Code</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this.onSignup}
+            style={{marginTop: 0.2*deviceHeight, textAlign: 'center'}}
+            activeOpacity={1}>
+            <Text style={styles.lineBtnTxt}>New here? Create an account.</Text>
+          </TouchableOpacity>
+        </View>        
+      </ImageBackground>
     );
   }
 }
@@ -89,7 +99,7 @@ const styles = StyleSheet.create({
   
   lineBtnTxt: {
     borderBottomColor: '#B2B2B2',
-    marginTop: 20,
-    borderBottomWidth: 1
+    textAlign: 'center',
+    borderBottomWidth: 1,
   },
 })
